@@ -41,11 +41,11 @@ public class SecurityConfig {
 		.exceptionHandling().authenticationEntryPoint(authEntry).
 		and().
 		authorizeRequests()
-		.antMatchers("/products/view","/users/signup","/users/signin",
+		.antMatchers("/api/users/register","/users/signup","/users/signin",
 				"/v*/api-doc*/**","/swagger-ui/**").permitAll()
 		// only required for JS clnts (react / angular) : for the pre flight requests
 		.antMatchers(HttpMethod.OPTIONS).permitAll()
-		.antMatchers("/products/purchase").hasRole("CUSTOMER")
+//		.antMatchers("/api/users/register").hasRole("ADMIN")
 		.antMatchers("/products/add").hasRole("ADMIN")
 		.anyRequest().authenticated()
 		.and()

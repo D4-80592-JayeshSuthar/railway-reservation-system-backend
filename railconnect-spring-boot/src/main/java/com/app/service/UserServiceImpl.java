@@ -1,5 +1,7 @@
 package com.app.service;
 
+import javax.validation.Valid;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -12,23 +14,21 @@ import com.app.entities.UserEntity;
 
 @Service
 @Transactional
-public class UserServiceImpl implements UserService {
-	//dep : dao layer i/f
-	@Autowired
-	private UserEntityDao userDao;
-	//dep
-	@Autowired
-	private ModelMapper mapper;
-	//dep 
-	@Autowired
-	private PasswordEncoder encoder;
 
-	@Override
-	public Signup userRegistration(Signup reqDTO) {
-		//dto --> entity
-		UserEntity user=mapper.map(reqDTO, UserEntity.class);
-		user.setPassword(encoder.encode(user.getPassword()));//pwd : encrypted using SHA
-		return mapper.map(userDao.save(user), Signup.class);
+public class UserServiceImpl implements UserService {
+	    @Autowired
+	    private UserEntityDao userDao;
+
+	    @Autowired
+	    private PasswordEncoder passwordEncoder; // Use a password encoder for security
+	    
+		@Override
+		public UserEntity userRegistration(@Valid UserEntity user) {
+			  user.setPassword(passwordEncoder.encode(user.getPassword())); // Encode password before saving
+		      user.setActive(true); // Set isActive to true for new users
+		      return userDao.save(user);
+		}
+	    
+	    
 	}
 
-}
