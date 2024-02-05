@@ -2,10 +2,12 @@ package com.app.entities;
 
 import java.time.LocalDate;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
@@ -51,9 +53,11 @@ public class TrainEntity extends BaseEntity {
     
     @Column(name = "cancel_status")
     private boolean cancelStatus;
-
-    @OneToOne
-    @PrimaryKeyJoinColumn
+    
+    @ManyToOne
     @JoinColumn(name = "route_id", foreignKey = @ForeignKey(name = "FK_Train_Route"))
+    private RouteEntity route;
+
+    @OneToOne(mappedBy = "train", cascade = CascadeType.ALL)
     private CoachEntity coach;
 }

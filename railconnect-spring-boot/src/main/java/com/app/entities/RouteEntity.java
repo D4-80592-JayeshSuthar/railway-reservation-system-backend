@@ -11,7 +11,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@Table(name = "routes")
+@Table(name = "routes") 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
