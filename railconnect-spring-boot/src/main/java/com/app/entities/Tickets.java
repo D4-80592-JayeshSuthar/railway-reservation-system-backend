@@ -1,7 +1,10 @@
 package com.app.entities;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -21,11 +24,22 @@ import lombok.ToString;
 @ToString
 public class Tickets {
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "pnr_number")
-	private Bookings booking;
-	private String seatNumber;
-	private TicketStatus status;
-	private String passengerName;
-	private Long aadharNumber;
+    @ManyToOne
+    @JoinColumn(name = "booking_id", foreignKey = @ForeignKey(name = "FK_Tickets_Booking"))
+    private Bookings booking;
+
+    @Column(name = "seat_number", length = 10)
+    private String seatNumber;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "ticket_status", length = 10)
+    private TicketStatus status;
+
+    @Column(name = "passenger_name", length = 50)
+    private String passengerName;
+
+    @Column(name = "aadhar_number")
+    private Long aadharNumber;
+
+    
 }

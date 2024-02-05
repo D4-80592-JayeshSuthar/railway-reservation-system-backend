@@ -2,6 +2,8 @@ package com.app.entities;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
@@ -22,6 +24,9 @@ public class CoachEntity {
 
     @Column(name = "first_class")
     private int firstClass;
+    @OneToOne
+    @JoinColumn(name = "id", referencedColumnName = "id", unique = true)
+    private TrainEntity train;
 
     @Column(name = "second_class")
     private int secondClass;
@@ -36,6 +41,6 @@ public class CoachEntity {
     private int chairCar;
 
 	
-	
+
 	
 }
