@@ -34,7 +34,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class Bookings {
+public class BookingEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "pnr")
 	@SequenceGenerator(name = "pnr", initialValue = 23342783)
@@ -42,7 +42,7 @@ public class Bookings {
 	private Long pnrNumber;
 
 	@OneToMany(mappedBy = "booking", cascade = CascadeType.ALL, orphanRemoval = true)
-	private Set<Tickets> tickets = new HashSet<Tickets>();
+	private Set<TicketEntity> tickets = new HashSet<TicketEntity>();
 
 	@OneToMany(mappedBy = "booking", cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<CoachEntity> coaches = new HashSet<CoachEntity>();
