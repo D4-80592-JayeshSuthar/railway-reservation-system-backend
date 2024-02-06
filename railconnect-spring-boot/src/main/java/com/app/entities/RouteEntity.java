@@ -2,6 +2,7 @@ package com.app.entities;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
@@ -17,9 +18,9 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class RouteEntity extends BaseEntity{
+public class RouteEntity{
 
-    @Column(name = "route_id", unique = true)
+	@Id
     private int routeId;
 
     @Column(length = 20)
@@ -28,7 +29,7 @@ public class RouteEntity extends BaseEntity{
     @Column(length = 20)
     private String destination;
 
-    @Column(length = 20, name = "intermediate")
+    @Column(length = 20)
     private String intermediate;
 	
 }

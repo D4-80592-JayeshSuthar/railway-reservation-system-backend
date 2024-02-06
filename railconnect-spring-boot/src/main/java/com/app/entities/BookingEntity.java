@@ -34,6 +34,7 @@ import lombok.ToString;
 @Setter
 @ToString
 public class BookingEntity {
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "pnr")
 	@SequenceGenerator(name = "pnr", initialValue = 23342783)
@@ -42,11 +43,8 @@ public class BookingEntity {
 
 	@OneToMany(mappedBy = "booking", cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<TicketEntity> tickets = new HashSet<TicketEntity>();
-
-//	@OneToMany(mappedBy = "booking", cascade = CascadeType.ALL, orphanRemoval = true)
-//	private Set<CoachEntity> coaches = new HashSet<CoachEntity>();
-
 	
+	//Ask Ghule Sir what to do
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "booking", cascade = CascadeType.ALL, orphanRemoval = true)
     private CoachEntity coach;
 
@@ -54,15 +52,10 @@ public class BookingEntity {
 	@JoinColumn(name = "user_id")
 	private UserEntity user;
 
-	@OneToMany(mappedBy = "booking", cascade = CascadeType.ALL, orphanRemoval = true)
-	private Set<TrainEntity> trains = new HashSet<TrainEntity>();
-
-
 	@ManyToOne
-	@JoinColumn(name = "train_id")
+	@JoinColumn(name = "train_number")
 	private TrainEntity train;
 
-	
 	
 //	@Transient // Marks this property as not persistent
 //	public String getSource() {
