@@ -4,13 +4,19 @@ import java.time.LocalDate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.Table;
-import javax.validation.constraints.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Past;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -28,50 +34,31 @@ public class UserEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "user_id")
     private Long id;
-
-    @NotBlank
     private String firstName;
-
-    @NotBlank
     private String lastName;
+    
+    @Lob
+	private byte[] image;
 
-    @Past
     private LocalDate birthDate;
 
-    @NotBlank
-    private String gender;
+    @Enumerated(EnumType.STRING) // Use STRING for case-sensitivity
+    @Column(name = "gender")
+    private Gender gender;
 
-    @NotBlank
-    @Pattern(regexp = "^[\\d+-]+$") // Pattern for phone numbers with optional dashes
     private String mobileNumber;
-
-    @NotBlank
-    @Email
     private String email;
-
-    @NotBlank
     private String username;
-
-    @NotBlank
-    @Size(min = 8) // Enforce password length of at least 8 characters
-    private String password; // Store password securely using a bcrypt encoder
-
-    @NotBlank
+    private String password;
     private String country;
-
-    @NotBlank
     private String state;
-
-    @NotBlank
-    @Pattern(regexp = "^\\d{5}$") // Pattern for 5-digit zip code
     private String zip;
-    
     private boolean isActive;
 
-	public UserEntity(Long id, @NotBlank String firstName, @NotBlank String lastName, @Past LocalDate birthDate,
-			@NotBlank String gender, @NotBlank @Pattern(regexp = "^[\\d+-]+$") String mobileNumber,
-			@NotBlank @Email String email, @NotBlank String username, @NotBlank @Size(min = 8) String password,
-			@NotBlank String country, @NotBlank String state, @NotBlank @Pattern(regexp = "^\\d{5}$") String zip,
+	public UserEntity(Long id,String firstName,String lastName, LocalDate birthDate,
+		    Gender gender, String mobileNumber,
+			 String email,  String username, String password,
+			String country,String state,String zip,
 			boolean isActive) {
 		super();
 		this.id = id; 
@@ -89,7 +76,9 @@ public class UserEntity {
 		this.isActive = isActive;
 	}
 
-	
+	public enum Gender {
+        MALE, FEMALE, OTHER
+    }
     
     
 }

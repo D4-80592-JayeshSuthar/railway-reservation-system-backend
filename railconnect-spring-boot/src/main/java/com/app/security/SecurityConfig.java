@@ -41,8 +41,10 @@ public class SecurityConfig {
 		.exceptionHandling().authenticationEntryPoint(authEntry).
 		and().
 		authorizeRequests()
-		.antMatchers("/trains/cancel/*","/trains/view","/users/signup","/users/signin",
-				"/v*/api-doc*/**","/swagger-ui/**").permitAll()
+		.antMatchers("/users/images/*",
+				"/trains/cancel/*","/trains/view","/users/signup",
+				"/users/signin","/users/*/status/inactive","/users/getAllUsers","/users/by-userid/*","/users/by-email/*","/users/by-username/*"
+				,"/v*/api-doc*/**","/users/*","/swagger-ui/**").permitAll()
 		// only required for JS clnts (react / angular) : for the pre flight requests
 		.antMatchers(HttpMethod.OPTIONS).permitAll()
 //		.antMatchers("/api/users/register").hasRole("ADMIN")
