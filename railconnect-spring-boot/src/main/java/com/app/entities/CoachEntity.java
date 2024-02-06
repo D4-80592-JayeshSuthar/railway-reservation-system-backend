@@ -3,6 +3,7 @@ package com.app.entities;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
@@ -23,6 +24,9 @@ import lombok.ToString;
 @ToString
 public class CoachEntity{
 
+	@Id
+    private int trainId;
+	
 	@OneToOne(fetch = FetchType.LAZY)
     @MapsId
     @JoinColumn(name = "train_number")

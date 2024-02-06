@@ -8,6 +8,8 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
@@ -44,9 +46,13 @@ public class BookingEntity {
 	@OneToMany(mappedBy = "booking", cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<TicketEntity> tickets = new HashSet<TicketEntity>();
 	
-	//Ask Ghule Sir what to do
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "booking", cascade = CascadeType.ALL, orphanRemoval = true)
-    private CoachEntity coach;
+//	//Ask Ghule Sir what to do
+//    @OneToOne(fetch = FetchType.LAZY, mappedBy = "booking", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private CoachEntity coach;
+	
+	@Enumerated(EnumType.STRING)
+	@Column(name = "coach")
+	private Coaches coach;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id")
@@ -56,12 +62,12 @@ public class BookingEntity {
 	@JoinColumn(name = "train_number")
 	private TrainEntity train;
 
-	
+//	bcoz it can be computed using train_number
 //	@Transient // Marks this property as not persistent
 //	public String getSource() {
 //		return train != null && train.getRoute() != null ? train.getRoute().getSource() : null;
 //	}
-//
+//	bcoz it can be computed using train_number
 //	// Example method to access destination, not stored directly in Booking table
 //	@Transient // Marks this property as not persistent
 //	public String getDestination() {
@@ -72,8 +78,8 @@ public class BookingEntity {
 //	@JoinColumn(name = "running_date", foreignKey = @ForeignKey(name = "fk_date_of_journey"))
 //	private LocalDate dateOfJourney;
 
-	
-	@Column(name = "running_date")
-	private LocalDate dateOfJourney;
+//	bcoz it can be computed using train_number
+//	@Column(name = "running_date")
+//	private LocalDate dateOfJourney;
 
 }
