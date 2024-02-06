@@ -28,7 +28,7 @@ public class TrainService {
                 .collect(Collectors.toList());
     }
 
-    public TrainDTO getTrainById(int trainNumber) {
+    public TrainDTO getTrainById(Long trainNumber) {
         TrainEntity trainEntity = trainDAO.findById((long) trainNumber).orElseThrow(() -> new ResourceNotFoundException("Train not found"));
         return convertToDTO(trainEntity);
     }
@@ -40,9 +40,10 @@ public class TrainService {
         return convertToDTO(trainEntity);
     }
 
-    public void cancelTrain(int trainNumber) {
+    public void cancelTrain(Long trainNumber) {
         TrainEntity trainEntity = trainDAO.findById((long) trainNumber).orElseThrow(() -> new ResourceNotFoundException("Train not found"));
         trainEntity.setCancelStatus(true);
+        trainEntity.setActiveStatus(false);
         trainDAO.save(trainEntity);
     }
 

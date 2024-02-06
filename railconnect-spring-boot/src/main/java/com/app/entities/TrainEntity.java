@@ -36,7 +36,7 @@ public class TrainEntity {
 
     @Id
     @Column(name = "train_number", unique = true)
-    private int trainNumber;
+    private long trainNumber;
 
     @Column(name = "train_name", length = 20)
     private String trainName;
