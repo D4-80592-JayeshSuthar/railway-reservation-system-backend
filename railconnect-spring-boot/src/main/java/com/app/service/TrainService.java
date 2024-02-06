@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.app.dao.TrainDAO;
+import com.app.dto.CoachDTO;
 import com.app.dto.TrainDTO;
 import com.app.entities.RouteEntity;
 import com.app.entities.TrainEntity;
@@ -47,6 +48,7 @@ public class TrainService {
 
     private TrainDTO convertToDTO(TrainEntity trainEntity) {
         TrainDTO trainDTO = new TrainDTO();
+        // Populate existing fields
         trainDTO.setTrainNumber(trainEntity.getTrainNumber());
         trainDTO.setTrainName(trainEntity.getTrainName());
         trainDTO.setArrivalTime(trainEntity.getArrivalTime());
@@ -56,8 +58,21 @@ public class TrainService {
         trainDTO.setActiveStatus(trainEntity.isActiveStatus());
         trainDTO.setCancelStatus(trainEntity.isCancelStatus());
         trainDTO.setRouteId(trainEntity.getRoute().getRouteId());
+        
+        trainDTO.setRunsOn(trainEntity.getRunsOn());
+        trainDTO.setScheduleLink(trainEntity.getScheduleLink());
+        trainDTO.setDepartureStation(trainEntity.getDepartureStation());
+        trainDTO.setArrivalStation(trainEntity.getArrivalStation());
+        trainDTO.setDuration(trainEntity.getDuration());
+        
+      
+        CoachDTO coachDTO = new CoachDTO();
+        coachDTO.setCoachType(trainEntity.getCoachType().toString()); 
+        trainDTO.setCoachDTO(coachDTO);
+        
         return trainDTO;
     }
+
 
 
     private TrainEntity convertToEntity(TrainDTO trainDTO) {
