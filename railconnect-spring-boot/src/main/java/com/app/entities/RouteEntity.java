@@ -21,7 +21,7 @@ import lombok.ToString;
 public class RouteEntity{
 
 	@Id
-    private int routeId;
+    private long routeId;
 
     @Column(length = 20)
     private String source;
