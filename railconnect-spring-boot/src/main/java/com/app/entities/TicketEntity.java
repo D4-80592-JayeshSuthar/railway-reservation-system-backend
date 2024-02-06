@@ -24,11 +24,11 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class Tickets {
+public class TicketEntity {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "pnr_number")
-	private Bookings booking;
+	private BookingEntity booking;
 	
 	@Column(name = "seat_number", length = 5)
 	private String seatNumber;
