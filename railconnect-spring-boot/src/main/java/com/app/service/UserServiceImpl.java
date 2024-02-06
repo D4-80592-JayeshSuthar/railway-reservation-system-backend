@@ -1,5 +1,9 @@
 package com.app.service;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import javax.validation.Valid;
 
 import org.modelmapper.ModelMapper;
@@ -8,8 +12,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.app.custom_exceptions.ResourceNotFoundException;
 import com.app.dao.UserEntityDao;
 import com.app.dto.Signup;
+import com.app.dto.UserDTO;
+import com.app.dto.UserDetailDTO;
 import com.app.entities.UserEntity;
 
 @Service
@@ -20,6 +27,9 @@ public class UserServiceImpl implements UserService {
 	    private UserEntityDao userDao;
 
 	    @Autowired
+	    private ModelMapper modelMapper;
+	    
+	    @Autowired
 	    private PasswordEncoder passwordEncoder; // Use a password encoder for security
 	    
 		@Override
@@ -28,7 +38,68 @@ public class UserServiceImpl implements UserService {
 		      user.setActive(true); // Set isActive to true for new users
 		      return userDao.save(user);
 		}
+
+		@Override
+		public UserDTO update(Long userId, @Valid UserDTO userDTO) {
+			    UserEntity userEntity = userDao.findById(userId)
+		                .orElseThrow(() -> 
+		                new ResourceNotFoundException("User not found with ID: " + userId));
+
+		        // Map DTO fields to entity using ModelMapper
+		        modelMapper.map(userDTO, userEntity);
+
+		        UserEntity updatedUser = userDao.save(userEntity);
+		        return modelMapper.map(updatedUser, UserDTO.class);
+		}
+
+		@Override
+		public Optional<UserEntity> findById(Long userId) {
+			return userDao.findById(userId);
+		}
+		
+	    @Override
+	    public void setInactive(Long userId) {
+	        UserEntity userEntity = findById(userId)
+	                .orElseThrow(() -> 
+	                new ResourceNotFoundException("User not found with ID: " + userId));
+	        userEntity.setActive(false); // Set isActive to false
+	        userDao.save(userEntity);
+	    }
 	    
+	    @Override
+	    public UserDetailDTO getUserDetailsById(Long userId) {
+	        UserEntity userEntity = userDao.findById(userId)
+	                                              .orElseThrow(() ->
+	                                              new ResourceNotFoundException("User not found with ID: " + userId));
+	        return modelMapper.map(userEntity, UserDetailDTO.class);
+	    }
+
+		@Override
+		 public UserDetailDTO getUserDetailsByEmail(String email) {
+	        UserEntity userEntity = userDao.findByEmail(email)
+	                                               .orElseThrow(() -> 
+		                                              new ResourceNotFoundException("User not found with Email id : " + email));
+	        return modelMapper.map(userEntity, UserDetailDTO.class);
+	    }
+
+		@Override
+		 public UserDetailDTO getUserDetailsByUsername(String username) {
+	        UserEntity userEntity = userDao.findByUsername(username)
+	                                               .orElseThrow(() ->
+	                                               new ResourceNotFoundException("User not found with username : " + username));
+	        return modelMapper.map(userEntity, UserDetailDTO.class);
+	    }
+
+		@Override
+	    public List<UserDetailDTO> getAllUsers() {
+	        List<UserEntity> users = userDao.findAll(); // Adjust depending on your repository implementation
+	        return users.stream()
+	                .map(user -> modelMapper.map(user, UserDetailDTO.class)) // Mapping in service
+	                .collect(Collectors.toList());
+	    }
+
+		
+		
 	    
-	}
+}
 
