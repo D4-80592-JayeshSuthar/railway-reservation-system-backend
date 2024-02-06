@@ -33,11 +33,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-<<<<<<< HEAD:railconnect-spring-boot/src/main/java/com/app/entities/Bookings.java
-public class Bookings extends BaseEntity{
-=======
 public class BookingEntity {
->>>>>>> bf0cc9ecb379a6711e2ded41968f2f8808622dd7:railconnect-spring-boot/src/main/java/com/app/entities/BookingEntity.java
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "pnr")
 	@SequenceGenerator(name = "pnr", initialValue = 23342783)
