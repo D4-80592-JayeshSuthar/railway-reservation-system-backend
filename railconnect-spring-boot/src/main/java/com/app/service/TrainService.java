@@ -1,5 +1,6 @@
 package com.app.service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -9,7 +10,7 @@ import org.springframework.stereotype.Service;
 import com.app.dao.TrainDAO;
 import com.app.dto.CoachDTO;
 import com.app.dto.TrainDTO;
-import com.app.entities.RouteEntity;
+import com.app.entities.Coaches;
 import com.app.entities.TrainEntity;
 import com.app.exceptions.ResourceNotFoundException;
 
@@ -46,10 +47,84 @@ public class TrainService {
         trainEntity.setActiveStatus(false);
         trainDAO.save(trainEntity);
     }
+    
+    public void removeTrain(Long trainNumber) {
+    	TrainEntity trainEntity = trainDAO.findById((long) trainNumber).orElseThrow(() -> new ResourceNotFoundException("Train not found"));
+    	trainEntity.setCancelStatus(true);
+    	trainEntity.setActiveStatus(false);
+    	trainDAO.save(trainEntity);
+    }
+    
+    
+    
+    // Service method to cancel a train and reschedule it to a particular date
+    public void cancelTrainAndReschedule(Long trainNumber, LocalDate rescheduleDate) {
+        TrainEntity trainEntity = trainDAO.findById(trainNumber)
+            .orElseThrow(() -> new ResourceNotFoundException("Train not found"));
+        
+        // Set cancelStatus and activeStatus
+        trainEntity.setCancelStatus(true);
+        trainEntity.setActiveStatus(false);
+        
+        // Reschedule the train to the provided date
+        trainEntity.setRunningDate(rescheduleDate);
+        
+        // Save the updated trainEntity
+        trainDAO.save(trainEntity);
+    }
+
+    
+    public void scheduleTrainAfterJourneyCompletion(Long trainNumber, String runsOn) {
+        // Logic to calculate the next running date based on runsOn and current date
+        LocalDate nextRunningDate = calculateNextRunningDate(runsOn);
+        
+        TrainEntity trainEntity = trainDAO.findById(trainNumber)
+            .orElseThrow(() -> new ResourceNotFoundException("Train not found"));
+        
+        // Update the running date of the train
+        trainEntity.setRunningDate(nextRunningDate);
+        
+        // Set cancelStatus to false and activeStatus to true
+        trainEntity.setCancelStatus(false);
+        trainEntity.setActiveStatus(true);
+        
+        // Save the updated trainEntity
+        trainDAO.save(trainEntity);
+    }
+    
+    private LocalDate calculateNextRunningDate(String runsOn) {
+        // Logic to calculate the next running date based on runsOn and current date
+        // Implement your logic here
+        return LocalDate.now().plusDays(7); // Example: Adding 7 days for weekly scheduling
+    }
+
+    
+
+    // Method to toggle the status of a train when it starts running
+    public void toggleTrainStatusWhenRunning() {
+        // Get all trains from the database
+        List<TrainEntity> allTrains = trainDAO.findAll();
+
+        // Iterate over each train
+        for (TrainEntity train : allTrains) {
+            // Check if the train is canceled and inactive
+            if (train.isCancelStatus() && !train.isActiveStatus()) {
+                // Check if the current date matches the scheduled running date
+                if (LocalDate.now().isEqual(train.getRunningDate())) {
+                    // Toggle the cancelStatus to false and activeStatus to true
+                    train.setCancelStatus(false);
+                    train.setActiveStatus(true);
+
+                    // Save the updated train entity
+                    trainDAO.save(train);
+                }
+            }
+        }
+    }
+    
 
     private TrainDTO convertToDTO(TrainEntity trainEntity) {
         TrainDTO trainDTO = new TrainDTO();
-        // Populate existing fields
         trainDTO.setTrainNumber(trainEntity.getTrainNumber());
         trainDTO.setTrainName(trainEntity.getTrainName());
         trainDTO.setArrivalTime(trainEntity.getArrivalTime());
@@ -59,22 +134,21 @@ public class TrainService {
         trainDTO.setActiveStatus(trainEntity.isActiveStatus());
         trainDTO.setCancelStatus(trainEntity.isCancelStatus());
         trainDTO.setRouteId(trainEntity.getRoute().getRouteId());
-        
         trainDTO.setRunsOn(trainEntity.getRunsOn());
         trainDTO.setScheduleLink(trainEntity.getScheduleLink());
         trainDTO.setDepartureStation(trainEntity.getDepartureStation());
         trainDTO.setArrivalStation(trainEntity.getArrivalStation());
         trainDTO.setDuration(trainEntity.getDuration());
-        
-      
-        CoachDTO coachDTO = new CoachDTO();
-        coachDTO.setCoachType(trainEntity.getCoachType().toString()); 
-        trainDTO.setCoachDTO(coachDTO);
-        
+
+        // Set the coachDTO
+        if (trainEntity.getCoach() != null) {
+            CoachDTO coachDTO = new CoachDTO();
+            coachDTO.setCoachType(trainEntity.getCoach().getCoachType().toString());
+            trainDTO.setCoachDTO(coachDTO);
+        }
+
         return trainDTO;
     }
-
-
 
     private TrainEntity convertToEntity(TrainDTO trainDTO) {
         TrainEntity trainEntity = new TrainEntity();
@@ -86,10 +160,19 @@ public class TrainService {
         trainEntity.setBaseFare(trainDTO.getBaseFare());
         trainEntity.setActiveStatus(trainDTO.isActiveStatus());
         trainEntity.setCancelStatus(trainDTO.isCancelStatus());
-        RouteEntity route = new RouteEntity();
-        route.setRouteId(trainDTO.getRouteId());
-        trainEntity.setRoute(route);
+        trainEntity.setRunsOn(trainDTO.getRunsOn());
+        trainEntity.setScheduleLink(trainDTO.getScheduleLink());
+        trainEntity.setDepartureStation(trainDTO.getDepartureStation());
+        trainEntity.setArrivalStation(trainDTO.getArrivalStation());
+        trainEntity.setDuration(trainDTO.getDuration());
+
+        // Set the coach
+        if (trainDTO.getCoachDTO() != null && trainDTO.getCoachDTO().getCoachType() != null) {
+            trainEntity.setCoachType(Coaches.valueOf(trainDTO.getCoachDTO().getCoachType()));
+        }
+
         return trainEntity;
     }
+
 
 }

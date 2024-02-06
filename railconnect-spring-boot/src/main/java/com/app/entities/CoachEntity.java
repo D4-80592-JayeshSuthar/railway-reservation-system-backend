@@ -22,34 +22,48 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class CoachEntity{
+public class CoachEntity {
 
 	@Id
-    private Long trainId;
-	
+	private Long trainId;
+
 	@OneToOne(fetch = FetchType.LAZY)
-    @MapsId
-    @JoinColumn(name = "train_number")
-    private TrainEntity train;
-	
-    @Column(name = "first_class")
-    private int firstClass;
+	@MapsId
+	@JoinColumn(name = "train_number")
+	private TrainEntity train;
+
+	@Column(name = "first_class")
+	private int firstClass;
 
 //    @OneToOne(mappedBy = "coach", cascade = CascadeType.ALL, orphanRemoval = true)
 //    private BookingEntity booking;
 
-    
-    @Column(name = "second_class")
-    private int secondClass;
+	@Column(name = "second_class")
+	private int secondClass;
 
-    @Column(name = "sleeper")
-    private int sleeper;
+	@Column(name = "sleeper")
+	private int sleeper;
 
-    @Column(name = "third_ac")
-    private int thirdAC;
+	@Column(name = "third_ac")
+	private int thirdAC;
 
-    @Column(name = "chair_car")
-    private int chairCar;
+	@Column(name = "chair_car")
+	private int chairCar;
+
+	public Coaches getCoachType() {
+		if (firstClass > 0) {
+			return Coaches.FIRSTCLASS;
+		} else if (secondClass > 0) {
+			return Coaches.SECONDCLASS;
+		} else if (sleeper > 0) {
+			return Coaches.SLEEPER;
+		} else if (thirdAC > 0) {
+			return Coaches.THIRDAC;
+		} else if (chairCar > 0) {
+			return Coaches.CHAIRCAR;
+		} else {
+			return null;
+		}
+	}
+
 }
-
-
