@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import com.app.dao.TrainDAO;
 import com.app.dto.CoachDTO;
 import com.app.dto.TrainDTO;
-import com.app.entities.RouteEntity;
+import com.app.entities.Coaches;
 import com.app.entities.TrainEntity;
 import com.app.exceptions.ResourceNotFoundException;
 
@@ -125,7 +125,6 @@ public class TrainService {
 
     private TrainDTO convertToDTO(TrainEntity trainEntity) {
         TrainDTO trainDTO = new TrainDTO();
-        // Populate existing fields
         trainDTO.setTrainNumber(trainEntity.getTrainNumber());
         trainDTO.setTrainName(trainEntity.getTrainName());
         trainDTO.setArrivalTime(trainEntity.getArrivalTime());
@@ -135,8 +134,6 @@ public class TrainService {
         trainDTO.setActiveStatus(trainEntity.isActiveStatus());
         trainDTO.setCancelStatus(trainEntity.isCancelStatus());
         trainDTO.setRouteId(trainEntity.getRoute().getRouteId());
-
-        // Set values for new fields
         trainDTO.setRunsOn(trainEntity.getRunsOn());
         trainDTO.setScheduleLink(trainEntity.getScheduleLink());
         trainDTO.setDepartureStation(trainEntity.getDepartureStation());
@@ -153,7 +150,6 @@ public class TrainService {
         return trainDTO;
     }
 
-
     private TrainEntity convertToEntity(TrainDTO trainDTO) {
         TrainEntity trainEntity = new TrainEntity();
         trainEntity.setTrainNumber(trainDTO.getTrainNumber());
@@ -164,10 +160,19 @@ public class TrainService {
         trainEntity.setBaseFare(trainDTO.getBaseFare());
         trainEntity.setActiveStatus(trainDTO.isActiveStatus());
         trainEntity.setCancelStatus(trainDTO.isCancelStatus());
-        RouteEntity route = new RouteEntity();
-        route.setRouteId(trainDTO.getRouteId());
-        trainEntity.setRoute(route);
+        trainEntity.setRunsOn(trainDTO.getRunsOn());
+        trainEntity.setScheduleLink(trainDTO.getScheduleLink());
+        trainEntity.setDepartureStation(trainDTO.getDepartureStation());
+        trainEntity.setArrivalStation(trainDTO.getArrivalStation());
+        trainEntity.setDuration(trainDTO.getDuration());
+
+        // Set the coach
+        if (trainDTO.getCoachDTO() != null && trainDTO.getCoachDTO().getCoachType() != null) {
+            trainEntity.setCoachType(Coaches.valueOf(trainDTO.getCoachDTO().getCoachType()));
+        }
+
         return trainEntity;
     }
+
 
 }
