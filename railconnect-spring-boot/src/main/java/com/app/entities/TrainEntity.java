@@ -8,6 +8,8 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
 import javax.persistence.Id;
@@ -32,38 +34,55 @@ import lombok.ToString;
 @ToString
 public class TrainEntity {
 
-	@Id
-	@Column(name = "train_number", unique = true)
-	private int trainNumber;
+    @Id
+    @Column(name = "train_number", unique = true)
+    private int trainNumber;
 
-	@Column(name = "train_name", length = 20)
-	private String trainName;
+    @Column(name = "train_name", length = 20)
+    private String trainName;
 
-	@Column(name = "arrival_time", length = 20)
-	private LocalTime arrivalTime;
+    @Column(name = "arrival_time", length = 20)
+    private LocalTime arrivalTime;
 
-	@Column(name = "departure_time", length = 20)
-	private LocalTime departureTime;
+    @Column(name = "departure_time", length = 20)
+    private LocalTime departureTime;
 
-	@Column(name = "running_date")
-	private LocalDate runningDate;
+    @Column(name = "running_date")
+    private LocalDate runningDate;
 
-	@Column(name = "base_fare")
-	private double baseFare;
+    @Column(name = "base_fare")
+    private double baseFare;
 
-	private boolean activeStatus;
+    private boolean activeStatus;
 
-	@Column(name = "cancel_status")
-	private boolean cancelStatus;
+    @Column(name = "cancel_status")
+    private boolean cancelStatus;
 
-	@OneToMany(mappedBy = "train", cascade = CascadeType.ALL, orphanRemoval = true)
-	private Set<BookingEntity> bookings = new HashSet<>();
+    @OneToMany(mappedBy = "train", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<BookingEntity> bookings = new HashSet<>();
 
-	@ManyToOne
-	@JoinColumn(name = "route_id", foreignKey = @ForeignKey(name = "fk_train_route"))
-	private RouteEntity route;
+    @ManyToOne
+    @JoinColumn(name = "route_id", foreignKey = @ForeignKey(name = "fk_train_route"))
+    private RouteEntity route;
 
-	@OneToOne(mappedBy = "train", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-	private CoachEntity coach;
+    @OneToOne(mappedBy = "train", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private CoachEntity coach;
 
+    @Enumerated(EnumType.STRING)
+    private Coaches coachType;
+
+    @Column(name = "runs_on")
+    private String runsOn;
+
+    @Column(name = "schedule_link")
+    private String scheduleLink;
+
+    @Column(name = "departure_station")
+    private String departureStation;
+
+    @Column(name = "arrival_station")
+    private String arrivalStation;
+
+    @Column(name = "duration")
+    private String duration;
 }
