@@ -1,8 +1,14 @@
 package com.app.service;
 
-import com.app.dto.Signup;
+import javax.validation.Valid;
+
+import com.app.entities.UserEntity;
 
 public interface UserService {
+
+	UserEntity userRegistration(@Valid UserEntity user);
 //sign up
-	Signup userRegistration(Signup reqDTO);
+	
+	
+	
 }
