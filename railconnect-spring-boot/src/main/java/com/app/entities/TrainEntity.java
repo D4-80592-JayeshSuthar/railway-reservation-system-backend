@@ -1,15 +1,18 @@
 package com.app.entities;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
@@ -25,13 +28,11 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class TrainEntity extends BaseEntity {
-
+public class TrainEntity {
+    
+    @Id
     @Column(name = "train_number", unique = true)
     private int trainNumber;
-    
-    @Column(name = "route_id", unique = true)
-    private int routeId;
 
     @Column(name = "train_name", length = 20)
     private String trainName;
@@ -54,10 +55,14 @@ public class TrainEntity extends BaseEntity {
     @Column(name = "cancel_status")
     private boolean cancelStatus;
     
+    @OneToMany(mappedBy = "train", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Bookings> bookings = new HashSet<>();
+
     @ManyToOne
     @JoinColumn(name = "route_id", foreignKey = @ForeignKey(name = "FK_Train_Route"))
     private RouteEntity route;
 
-    @OneToOne(mappedBy = "train", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "train", cascade = CascadeType.ALL, orphanRemoval = true)
     private CoachEntity coach;
+    
 }

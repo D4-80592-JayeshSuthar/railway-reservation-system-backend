@@ -19,7 +19,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -34,7 +33,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class Bookings {
+public class Bookings extends BaseEntity{
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "pnr")
 	@SequenceGenerator(name = "pnr", initialValue = 23342783)
@@ -44,8 +43,12 @@ public class Bookings {
 	@OneToMany(mappedBy = "booking", cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<Tickets> tickets = new HashSet<Tickets>();
 
-	@OneToMany(mappedBy = "booking", cascade = CascadeType.ALL, orphanRemoval = true)
-	private Set<CoachEntity> coaches = new HashSet<CoachEntity>();
+//	@OneToMany(mappedBy = "booking", cascade = CascadeType.ALL, orphanRemoval = true)
+//	private Set<CoachEntity> coaches = new HashSet<CoachEntity>();
+
+	
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "booking", cascade = CascadeType.ALL, orphanRemoval = true)
+    private CoachEntity coach;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id")
@@ -54,6 +57,13 @@ public class Bookings {
 	@OneToMany(mappedBy = "booking", cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<TrainEntity> trains = new HashSet<TrainEntity>();
 
+
+	@ManyToOne
+	@JoinColumn(name = "train_id")
+	private TrainEntity train;
+
+	
+	
 //	@Transient // Marks this property as not persistent
 //	public String getSource() {
 //		return train != null && train.getRoute() != null ? train.getRoute().getSource() : null;
@@ -65,7 +75,12 @@ public class Bookings {
 //		return train != null && train.getRoute() != null ? train.getRoute().getDestination() : null;
 //	}
 
-	@OneToOne
-	@JoinColumn(name = "running_date",foreignKey = @ForeignKey(name = "fk_date_of_journey"))
+//	@OneToOne
+//	@JoinColumn(name = "running_date", foreignKey = @ForeignKey(name = "fk_date_of_journey"))
+//	private LocalDate dateOfJourney;
+
+	
+	@Column(name = "running_date")
 	private LocalDate dateOfJourney;
+
 }

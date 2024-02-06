@@ -1,8 +1,8 @@
 package com.app.entities;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -19,28 +19,25 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class CoachEntity {
-
+public class CoachEntity extends BaseEntity {
 
     @Column(name = "first_class")
     private int firstClass;
-    @OneToOne
-    @JoinColumn(name = "id", referencedColumnName = "id", unique = true)
-    private TrainEntity train;
+
+    @OneToOne(mappedBy = "coach", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Bookings booking;
 
     @Column(name = "second_class")
     private int secondClass;
 
     @Column(name = "sleeper")
     private int sleeper;
- 
+
     @Column(name = "third_ac")
     private int thirdAC;
 
     @Column(name = "chair_car")
     private int chairCar;
-
-	
-
-	
 }
+
+
