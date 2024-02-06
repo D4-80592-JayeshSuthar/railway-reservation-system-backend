@@ -13,7 +13,7 @@ import lombok.Setter;
 @Setter
 public class TrainDTO {
     // Existing fields
-    private Integer trainNumber;
+    private Long trainNumber;
     private String trainName;
     private LocalTime arrivalTime;
     private LocalTime departureTime;

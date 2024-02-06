@@ -28,7 +28,7 @@ import lombok.ToString;
 public class TicketEntity {
 	
 	@Id
-	private int ticketId;
+	private Long ticketId;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "pnr_number")

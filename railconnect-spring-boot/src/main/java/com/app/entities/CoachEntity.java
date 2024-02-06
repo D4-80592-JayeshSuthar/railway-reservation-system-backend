@@ -25,7 +25,7 @@ import lombok.ToString;
 public class CoachEntity{
 
 	@Id
-    private int trainId;
+    private Long trainId;
 	
 	@OneToOne(fetch = FetchType.LAZY)
     @MapsId

@@ -41,7 +41,7 @@ public class TrainController {
     // Admin can cancel trains
     @DeleteMapping("/cancel/{trainNumber}")
     //@PreAuthorize("hasRole('ADMIN')")
-    public void cancelTrain(@PathVariable int trainNumber) {
+    public void cancelTrain(@PathVariable long trainNumber) {
         trainService.cancelTrain(trainNumber);
     }
 }
