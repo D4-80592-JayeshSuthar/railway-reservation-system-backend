@@ -25,12 +25,32 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class Tickets {
+public class TicketEntity {
 
+<<<<<<< HEAD:railconnect-spring-boot/src/main/java/com/app/entities/Tickets.java
     @Id  
     @GeneratedValue(strategy = GenerationType.IDENTITY)  
     @Column(name = "ticket_id")  
     private Long ticketId;
+=======
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "pnr_number")
+	private BookingEntity booking;
+	
+	@Column(name = "seat_number", length = 5)
+	private String seatNumber;
+	
+	@Enumerated(EnumType.STRING)
+	@Column(name = "status", length = 10)
+	private TicketStatus status;
+	
+	@Column(name = "passenger_name", length = 50)
+	private String passengerName;
+	
+	@Column(name = "aadhar_number", length = 10)
+	private Long aadharNumber;
+}
+>>>>>>> bf0cc9ecb379a6711e2ded41968f2f8808622dd7:railconnect-spring-boot/src/main/java/com/app/entities/TicketEntity.java
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pnr_number", referencedColumnName = "pnrNumber") // Assuming "pnrNumber" is the correct property in Bookings
