@@ -7,10 +7,14 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.app.dao.CoachDAO;
+import com.app.dao.RouteDAO;
 import com.app.dao.TrainDAO;
 import com.app.dto.CoachDTO;
 import com.app.dto.TrainDTO;
+import com.app.entities.CoachEntity;
 import com.app.entities.Coaches;
+import com.app.entities.RouteEntity;
 import com.app.entities.TrainEntity;
 import com.app.exceptions.ResourceNotFoundException;
 
@@ -20,6 +24,12 @@ public class TrainService {
     @Autowired
     private TrainDAO trainDAO;
 
+    @Autowired
+    private RouteDAO routeDAO;
+
+    @Autowired
+    private CoachDAO coachDAO;
+    
     @Autowired
     private RouteService routeService;
 
@@ -35,12 +45,53 @@ public class TrainService {
     }
 
     public TrainDTO addTrain(TrainDTO trainDTO) {
+        // Convert TrainDTO to TrainEntity
         TrainEntity trainEntity = convertToEntity(trainDTO);
-        trainEntity.setRoute(routeService.getRouteById(trainDTO.getRouteId()).toEntity());
+
+        // Set RouteEntity in TrainEntity
+        RouteEntity routeEntity = new RouteEntity();
+        routeEntity.setSource(trainDTO.getDepartureStation());
+        routeEntity.setDestination(trainDTO.getArrivalStation());
+        // Assuming intermediate stations can be added here as well
+        routeEntity.setIntermediate("Intermediate stations");
+
+        // Save RouteEntity to get Route ID
+        routeEntity = routeDAO.save(routeEntity);
+
+        // Set the generated Route ID in TrainEntity
+        trainEntity.setRoute(routeEntity);
+
+        // Save TrainEntity to get Train ID
         trainEntity = trainDAO.save(trainEntity);
+
+        // Add Coaches to Coach table
+        addCoachesToTrain(trainDTO, trainEntity);
+
+        // Convert TrainEntity back to TrainDTO and return
         return convertToDTO(trainEntity);
     }
 
+    private void addCoachesToTrain(TrainDTO trainDTO, TrainEntity trainEntity) {
+        // Iterate over the coachDTOs in TrainDTO and add them to CoachEntity
+        for (String coachType : trainDTO.getClassTypes().keySet()) {
+        	
+            int seatCapacity = Integer.parseInt(trainDTO.getClassTypes().get(coachType));
+
+            // Create CoachEntity and set its properties
+            CoachEntity coachEntity = new CoachEntity();
+            coachEntity.setTrain(trainEntity);
+            coachEntity.setFirstClass(coachType.equals("FIRSTCLASS") ? seatCapacity : 0);
+            coachEntity.setSecondClass(coachType.equals("SECONDCLASS") ? seatCapacity : 0);
+            coachEntity.setSleeper(coachType.equals("SLEEPER") ? seatCapacity : 0);
+            coachEntity.setThirdAC(coachType.equals("THIRDAC") ? seatCapacity : 0);
+            coachEntity.setChairCar(coachType.equals("CHAIRCAR") ? seatCapacity : 0);
+
+            // Save CoachEntity to persist it in the database
+            coachDAO.save(coachEntity);
+        }
+    }
+
+    
     public void cancelTrain(Long trainNumber) {
         TrainEntity trainEntity = trainDAO.findById((long) trainNumber).orElseThrow(() -> new ResourceNotFoundException("Train not found"));
         trainEntity.setCancelStatus(true);
