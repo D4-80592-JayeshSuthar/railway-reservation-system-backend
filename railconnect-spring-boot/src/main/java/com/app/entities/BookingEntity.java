@@ -2,8 +2,8 @@ package com.app.entities;
 
 
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
+
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -11,14 +11,12 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
-import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -44,7 +42,7 @@ public class BookingEntity {
 	private Long pnrNumber;
 
 	@OneToMany(mappedBy = "booking", cascade = CascadeType.ALL, orphanRemoval = true)
-	private Set<TicketEntity> tickets = new HashSet<TicketEntity>();
+	private List<TicketEntity> tickets;
 	
 //	//Ask Ghule Sir what to do
 //    @OneToOne(fetch = FetchType.LAZY, mappedBy = "booking", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -79,7 +77,12 @@ public class BookingEntity {
 //	private LocalDate dateOfJourney;
 
 //	bcoz it can be computed using train_number
-//	@Column(name = "running_date")
-//	private LocalDate dateOfJourney;
-
+	@Column(name = "date_of_journey")
+	private LocalDate dateOfJourney;
+	
+	@Column(length = 20)
+	private String fromStation;
+	
+	@Column(length = 20)
+	private String toStation;
 }

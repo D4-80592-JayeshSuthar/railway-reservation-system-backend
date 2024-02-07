@@ -28,6 +28,7 @@ import lombok.ToString;
 public class TicketEntity {
 	
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long ticketId;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
