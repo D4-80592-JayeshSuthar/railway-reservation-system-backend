@@ -65,11 +65,14 @@ public class TrainEntity {
     @JoinColumn(name = "route_id", foreignKey = @ForeignKey(name = "fk_train_route"))
     private RouteEntity route;
 
-    @OneToOne(mappedBy = "train", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private CoachEntity coach;
+//    @OneToOne(mappedBy = "train", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+//    private CoachEntity coach;
 
-    @Enumerated(EnumType.STRING)
-    private Coaches coachType;
+//    @Enumerated(EnumType.STRING)
+//    private Coaches coachType;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "coach_id", nullable = false)
+    private CoachEntity coach;
 
     @Column(name = "runs_on")
     private String runsOn;

@@ -22,7 +22,7 @@ public class TrainDTO {
     private boolean activeStatus;
     private boolean cancelStatus;
     private Long routeId;
-    private CoachDTO coachDTO; 
+    private Long coachId; 
 
     // New fields
     private String runsOn;
@@ -30,5 +30,5 @@ public class TrainDTO {
     private String departureStation;
     private String arrivalStation;
     private String duration;
-    private Map<String, String> classTypes;
+   // private Map<String, String> classTypes;
 }

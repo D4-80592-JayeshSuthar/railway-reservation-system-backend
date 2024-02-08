@@ -30,8 +30,9 @@ public class TrainService {
     @Autowired
     private CoachDAO coachDAO;
     
-    @Autowired
-    private RouteService routeService;
+//    @Autowired
+//    private RouteService routeService;
+    
 
     public List<TrainDTO> getAllTrains() {
         return trainDAO.findAll().stream()
@@ -48,48 +49,52 @@ public class TrainService {
         // Convert TrainDTO to TrainEntity
         TrainEntity trainEntity = convertToEntity(trainDTO);
 
-        // Set RouteEntity in TrainEntity
-        RouteEntity routeEntity = new RouteEntity();
-        routeEntity.setSource(trainDTO.getDepartureStation());
-        routeEntity.setDestination(trainDTO.getArrivalStation());
-        // Assuming intermediate stations can be added here as well
-        routeEntity.setIntermediate("Intermediate stations");
-
-        // Save RouteEntity to get Route ID
-        routeEntity = routeDAO.save(routeEntity);
+        // Use This to ADD a new Route according to train
+//        RouteEntity routeEntity = new RouteEntity();
+//        routeEntity.setSource(trainDTO.getDepartureStation());
+//        routeEntity.setDestination(trainDTO.getArrivalStation());
+//        // Assuming intermediate stations can be added here as well
+//        routeEntity.setIntermediate("Interim");
+//
+//        // Save RouteEntity to get Route ID
+//        routeEntity = routeDAO.save(routeEntity);
 
         // Set the generated Route ID in TrainEntity
-        trainEntity.setRoute(routeEntity);
-
+//        trainEntity.setRoute(trainEntity.getRoute());
+// 		can use to add a new Coach according to this train
+//        trainEntity.setCoach(null);
         // Save TrainEntity to get Train ID
         trainEntity = trainDAO.save(trainEntity);
 
         // Add Coaches to Coach table
-        addCoachesToTrain(trainDTO, trainEntity);
+//        addCoachesToTrain(trainDTO, trainEntity);
+//        CoachEntity newCoachCapacity = toEntityCoach(trainDTO.getCoachCapacity(), trainDAO);
+//        trainEntity.setCoach(toEntityCoach(trainDTO.getCoachCapacity(), trainDAO));
+//        coachDAO.save(trainEntity.getCoach());
 
         // Convert TrainEntity back to TrainDTO and return
         return convertToDTO(trainEntity);
     }
 
-    private void addCoachesToTrain(TrainDTO trainDTO, TrainEntity trainEntity) {
-        // Iterate over the coachDTOs in TrainDTO and add them to CoachEntity
-        for (String coachType : trainDTO.getClassTypes().keySet()) {
-        	
-            int seatCapacity = Integer.parseInt(trainDTO.getClassTypes().get(coachType));
-
-            // Create CoachEntity and set its properties
-            CoachEntity coachEntity = new CoachEntity();
-            coachEntity.setTrain(trainEntity);
-            coachEntity.setFirstClass(coachType.equals("FIRSTCLASS") ? seatCapacity : 0);
-            coachEntity.setSecondClass(coachType.equals("SECONDCLASS") ? seatCapacity : 0);
-            coachEntity.setSleeper(coachType.equals("SLEEPER") ? seatCapacity : 0);
-            coachEntity.setThirdAC(coachType.equals("THIRDAC") ? seatCapacity : 0);
-            coachEntity.setChairCar(coachType.equals("CHAIRCAR") ? seatCapacity : 0);
-
-            // Save CoachEntity to persist it in the database
-            coachDAO.save(coachEntity);
-        }
-    }
+//    private void addCoachesToTrain(TrainDTO trainDTO, TrainEntity trainEntity) {
+//        // Iterate over the coachDTOs in TrainDTO and add them to CoachEntity
+//        for (String coachType : trainDTO.getClassTypes().keySet()) {
+//        	
+//            int seatCapacity = Integer.parseInt(trainDTO.getClassTypes().get(coachType));
+//
+//            // Create CoachEntity and set its properties
+//            CoachEntity coachEntity = new CoachEntity();
+//            coachEntity.setTrain(trainEntity);
+//            coachEntity.setFirstClass(coachType.equals("FIRSTCLASS") ? seatCapacity : 0);
+//            coachEntity.setSecondClass(coachType.equals("SECONDCLASS") ? seatCapacity : 0);
+//            coachEntity.setSleeper(coachType.equals("SLEEPER") ? seatCapacity : 0);
+//            coachEntity.setThirdAC(coachType.equals("THIRDAC") ? seatCapacity : 0);
+//            coachEntity.setChairCar(coachType.equals("CHAIRCAR") ? seatCapacity : 0);
+//
+//            // Save CoachEntity to persist it in the database
+//            coachDAO.save(coachEntity);
+//        }
+//    }
 
     
     public void cancelTrain(Long trainNumber) {
@@ -190,13 +195,13 @@ public class TrainService {
         trainDTO.setDepartureStation(trainEntity.getDepartureStation());
         trainDTO.setArrivalStation(trainEntity.getArrivalStation());
         trainDTO.setDuration(trainEntity.getDuration());
-
+        trainDTO.setCoachId(trainEntity.getCoach().getCoachId());;
         // Set the coachDTO
-        if (trainEntity.getCoach() != null) {
-            CoachDTO coachDTO = new CoachDTO();
-            coachDTO.setCoachType(trainEntity.getCoach().getCoachType().toString());
-            trainDTO.setCoachDTO(coachDTO);
-        }
+//        if (trainEntity.getCoach() != null) {
+//            CoachDTO coachDTO = new CoachDTO();
+//            coachDTO.setCoachType(trainEntity.getCoach().getCoachType().toString());
+//            trainDTO.setCoachDTO(coachDTO);
+//        }
 
         return trainDTO;
     }
@@ -216,14 +221,49 @@ public class TrainService {
         trainEntity.setDepartureStation(trainDTO.getDepartureStation());
         trainEntity.setArrivalStation(trainDTO.getArrivalStation());
         trainEntity.setDuration(trainDTO.getDuration());
-
-        // Set the coach
-        if (trainDTO.getCoachDTO() != null && trainDTO.getCoachDTO().getCoachType() != null) {
-            trainEntity.setCoachType(Coaches.valueOf(trainDTO.getCoachDTO().getCoachType()));
-        }
+        trainEntity.setRoute(routeDAO.findByRouteId(trainDTO.getRouteId())
+        		 .orElseThrow(() -> new ResourceNotFoundException("Route not found")));
+        trainEntity.setCoach(coachDAO.findByCoachId(trainDTO.getCoachId())
+        		.orElseThrow(() -> new ResourceNotFoundException("Coach Not Found")));
+        //        trainEntity.setCoach(toEntityCoach(trainDTO.getCoachCapacity(), trainDAO));
+// 		  Set the coach
+//        if (trainDTO.getCoachDTO() != null && trainDTO.getCoachDTO().getCoachType() != null) {
+//            trainEntity.setCoachType(Coaches.valueOf(trainDTO.getCoachDTO().getCoachType()));
+//        }
 
         return trainEntity;
     }
+    
+//    
+//    public CoachDTO fromEntityCoach(CoachEntity entity) {
+//        CoachDTO dto = new CoachDTO();
+//        if (entity != null && entity.getTrain() != null) {
+//            dto.setTrainNumber(entity.getTrain().getTrainNumber());
+//        }
+//        dto.setFirstClass(entity.getFirstClass());
+//        dto.setSecondClass(entity.getSecondClass());
+//        dto.setSleeper(entity.getSleeper());
+//        dto.setThirdAC(entity.getThirdAC());
+//        dto.setChairCar(entity.getChairCar());
+//        return dto;
+//    }
+    
+//    public CoachEntity toEntityCoach(CoachDTO dto, TrainDAO trainRepository) {
+//        CoachEntity entity = new CoachEntity();
+//        if (dto.getTrainNumber() != null) {
+//            TrainEntity train = trainRepository.findById(dto.getTrainNumber()).orElse(null);
+//            entity.setTrain(train);
+//            if (train != null) {
+//                entity.setTrainId(train.getTrainNumber()); // Assuming trainId in CoachEntity is meant to store trainNumber
+//            }
+//        }
+//        entity.setFirstClass(dto.getFirstClass());
+//        entity.setSecondClass(dto.getSecondClass());
+//        entity.setSleeper(dto.getSleeper());
+//        entity.setThirdAC(dto.getThirdAC());
+//        entity.setChairCar(dto.getChairCar());
+//        return entity;
+//    }
 
 
 }

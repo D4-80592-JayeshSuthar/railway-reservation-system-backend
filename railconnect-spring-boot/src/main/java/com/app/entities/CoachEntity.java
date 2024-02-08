@@ -3,6 +3,8 @@ package com.app.entities;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.MapsId;
@@ -16,7 +18,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@Table(name = "coaches")
+@Table(name = "coachCapacity")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -25,12 +27,14 @@ import lombok.ToString;
 public class CoachEntity {
 
 	@Id
-	private Long trainId;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "coach_id")
+	private Long coachId;
 
-	@OneToOne(fetch = FetchType.LAZY)
-	@MapsId
-	@JoinColumn(name = "train_number")
-	private TrainEntity train;
+//	@OneToOne(fetch = FetchType.LAZY)
+//	@MapsId
+//	@JoinColumn(name = "train_number")
+//	private TrainEntity train;
 
 	@Column(name = "first_class")
 	private int firstClass;
@@ -50,20 +54,20 @@ public class CoachEntity {
 	@Column(name = "chair_car")
 	private int chairCar;
 
-	public Coaches getCoachType() {
-		if (firstClass > 0) {
-			return Coaches.FIRSTCLASS;
-		} else if (secondClass > 0) {
-			return Coaches.SECONDCLASS;
-		} else if (sleeper > 0) {
-			return Coaches.SLEEPER;
-		} else if (thirdAC > 0) {
-			return Coaches.THIRDAC;
-		} else if (chairCar > 0) {
-			return Coaches.CHAIRCAR;
-		} else {
-			return null;
-		}
-	}
+//	public Coaches getCoachType() {
+//		if (firstClass > 0) {
+//			return Coaches.FIRSTCLASS;
+//		} else if (secondClass > 0) {
+//			return Coaches.SECONDCLASS;
+//		} else if (sleeper > 0) {
+//			return Coaches.SLEEPER;
+//		} else if (thirdAC > 0) {
+//			return Coaches.THIRDAC;
+//		} else if (chairCar > 0) {
+//			return Coaches.CHAIRCAR;
+//		} else {
+//			return null;
+//		}
+//}
 
 }
