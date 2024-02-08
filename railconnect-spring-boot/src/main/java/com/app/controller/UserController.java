@@ -81,6 +81,14 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 	
+	
+	// Add the new endpoint for setting a user's status to active
+	@PutMapping("/{userId}/status/active")
+	public ResponseEntity<Void> setActive(@PathVariable Long userId) {
+	    userService.setActive(userId);
+	    return ResponseEntity.noContent().build();
+	}
+	
 	// to get the user details from the UserProfileDTO
 	// confusion 
 	

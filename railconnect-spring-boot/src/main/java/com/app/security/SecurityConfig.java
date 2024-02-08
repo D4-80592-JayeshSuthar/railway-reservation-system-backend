@@ -41,7 +41,7 @@ public class SecurityConfig {
 		.exceptionHandling().authenticationEntryPoint(authEntry).
 		and().
 		authorizeRequests()
-		.antMatchers("/users/images/*","/trains/*/schedule",
+		.antMatchers("/users/*/status/active","/users/*/status/inactive","/users/images/*","/trains/*/schedule",
 				"/trains/*/cancel","/trains/add","/trains/remove/*","/trains/view","/users/signup",
 				"/users/signin","/users/by-userid/*",
 				"/users/by-email/*","/users/by-username/*"
@@ -50,7 +50,7 @@ public class SecurityConfig {
 		// only required for JS clnts (react / angular) : for the pre flight requests
 		.antMatchers(HttpMethod.OPTIONS).permitAll()
 		.antMatchers("/api/users/register").hasRole("USER")
-		.antMatchers("/users/*/status/inactive","/users/getAllUsers").hasRole("ADMIN")
+		.antMatchers("/users/getAllUsers").hasRole("ADMIN")
 		.anyRequest().authenticated()
 		.and()
 		//to tell spring sec : not to use HttpSession to store user's auth details
