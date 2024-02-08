@@ -1,3 +1,5 @@
+// BookingController.java
+
 package com.app.controller;
 
 import java.util.List;
@@ -21,21 +23,21 @@ import com.app.service.BookingService;
 @Validated
 public class BookingController {
 
-	@Autowired
-	private BookingService bookingService;
-	
-	@GetMapping("/mybookings")
-	public List<BookingDTO> showMyBookings(@RequestHeader("userId") Long userId){
-		return bookingService.findUserBookings(userId);
-	}
-	
-	@GetMapping("/allbookings")
-	public List<BookingDTO> showAllBookings(){
-		return bookingService.showAllBookings();
-	}
-	
-	@PostMapping("/addbooking")
-	public BookingDTO bookTicktes(@RequestBody BookingDTO bookinDto) {
-		return bookingService.addNewBooking(bookinDto);
-	}
+    @Autowired
+    private BookingService bookingService;
+    
+    @GetMapping("/mybookings")
+    public List<BookingDTO> showMyBookings(@RequestHeader("userId") Long userId){
+        return bookingService.findUserBookings(userId);
+    }
+    
+    @GetMapping("/allbookings")
+    public List<BookingDTO> showAllBookings(){
+        return bookingService.showAllBookings();
+    }
+    
+    @PostMapping("/addbooking")
+    public BookingDTO bookTickets(@RequestBody BookingDTO bookingDto) {
+        return bookingService.addNewBooking(bookingDto);
+    }
 }
