@@ -73,6 +73,19 @@ public class UserServiceImpl implements UserService {
 	                                              new ResourceNotFoundException("User not found with ID: " + userId));
 	        return modelMapper.map(userEntity, UserDetailDTO.class);
 	    }
+	    
+	    
+	
+
+	 // Implement the method to set a user's status to active
+	 @Override
+	 public void setActive(Long userId) {
+	     UserEntity userEntity = findById(userId)
+	             .orElseThrow(() -> new ResourceNotFoundException("User not found with ID: " + userId));
+	     userEntity.setActive(true); // Set isActive to true
+	     userDao.save(userEntity);
+	 }
+
 
 		@Override
 		 public UserDetailDTO getUserDetailsByEmail(String email) {

@@ -18,6 +18,10 @@ public interface UserService {
 	Optional<UserEntity> findById(Long userId);
 
 	void setInactive(Long userId);
+	
+
+	void setActive(Long userId);
+
 
 	UserDetailDTO getUserDetailsById(Long userId);
 
