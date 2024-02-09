@@ -1,8 +1,8 @@
 package com.app.entities;
 
+import javax.persistence.AttributeOverride; 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Id;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
@@ -18,10 +18,11 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class RouteEntity{
+@AttributeOverride(name = "id", column = @Column(name = "route_id"))
+public class RouteEntity extends BaseEntity{
 
-	@Id
-    private long routeId;
+//	@Id
+//    private long routeId;
 
     @Column(length = 20)
     private String source;
@@ -29,7 +30,7 @@ public class RouteEntity{
     @Column(length = 20)
     private String destination;
 
-    @Column(length = 20)
-    private String intermediate;
+//    @Column(length = 20)
+//    private String intermediate;
 	
 }

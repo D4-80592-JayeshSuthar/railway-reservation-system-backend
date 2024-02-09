@@ -2,9 +2,10 @@ package com.app.entities;
 
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Set;
 
-import java.util.List;
-
+import javax.persistence.AttributeOverride;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -19,6 +20,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.FutureOrPresent;
+import javax.validation.constraints.PastOrPresent;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -33,16 +36,17 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class BookingEntity {
+@AttributeOverride(name = "id", column = @Column(name = "pnr_number"))
+public class BookingEntity extends BaseEntity{
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "pnr")
-	@SequenceGenerator(name = "pnr", initialValue = 23342783)
-	@Column(name = "pnr_number")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "pnr_sequence_generator")
+	@SequenceGenerator(name = "pnr_sequence_generator", initialValue = 10000)
+//	@Column(name = "pnr_number")
 	private Long pnrNumber;
 
 	@OneToMany(mappedBy = "booking", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<TicketEntity> tickets;
+	private Set<TicketEntity> tickets;
 	
 //	//Ask Ghule Sir what to do
 //    @OneToOne(fetch = FetchType.LAZY, mappedBy = "booking", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -53,11 +57,11 @@ public class BookingEntity {
 	private Coaches coach;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "user_id")
+	@JoinColumn(name = "user_id_fk")
 	private UserEntity user;
 
 	@ManyToOne
-	@JoinColumn(name = "train_number")
+	@JoinColumn(name = "train_number_fk")
 	private TrainEntity train;
 
 //	bcoz it can be computed using train_number
@@ -77,12 +81,21 @@ public class BookingEntity {
 //	private LocalDate dateOfJourney;
 
 //	bcoz it can be computed using train_number
+	
 	@Column(name = "date_of_journey")
+	@FutureOrPresent
 	private LocalDate dateOfJourney;
 	
-	@Column(length = 20)
+	@Column
+	@PastOrPresent
+	private LocalDateTime bookingDateTime;
+	
+	@Column(length = 20, nullable = false)
 	private String fromStation;
 	
-	@Column(length = 20)
+	@Column(length = 20, nullable = false)
 	private String toStation;
+	
+	@Column(nullable = false)
+	private Double totalAmount;
 }

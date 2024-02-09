@@ -27,10 +27,10 @@ public class RouteDTO {
     
     public RouteEntity toEntity() {
         RouteEntity routeEntity = new RouteEntity();
-        routeEntity.setRouteId(this.routeId);
+//        routeEntity.setRouteId(this.routeId);
         routeEntity.setSource(this.source);
         routeEntity.setDestination(this.destination);
-        routeEntity.setIntermediate(this.intermediate);
+//        routeEntity.setIntermediate(this.intermediate);
         return routeEntity;
     }
 

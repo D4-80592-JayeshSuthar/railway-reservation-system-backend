@@ -1,9 +1,7 @@
 package com.app.entities;
 
-import javax.persistence.Column;
+import javax.persistence.Column; 
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
@@ -17,10 +15,10 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class Admin extends BaseEntity{
+public class AdminEntity extends BaseEntity{
 
 	@Column(length = 20)
-	private String name;
+	private String userName;
 
 	@Column(length = 300, nullable = false)
 	private String password;

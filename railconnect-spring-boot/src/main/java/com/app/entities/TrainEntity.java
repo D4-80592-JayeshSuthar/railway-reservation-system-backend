@@ -1,23 +1,23 @@
 package com.app.entities;
 
-import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.AttributeOverride;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -32,57 +32,70 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class TrainEntity {
+@AttributeOverride(name = "id", column = @Column(name = "train_number"))
+public class TrainEntity extends BaseEntity{
 
-    @Id
-    @Column(name = "train_number", unique = true)
+	@Id
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "train_sequence_generator")
+	@SequenceGenerator(name = "train_sequence_generator", initialValue = 1000)
     private long trainNumber;
 
-    @Column(name = "train_name", length = 20)
+    @Column(name = "train_name", length = 20,nullable = false)
     private String trainName;
 
-    @Column(name = "arrival_time", length = 20)
+    @Column(nullable = false)
     private LocalTime arrivalTime;
 
-    @Column(name = "departure_time", length = 20)
+    @Column(nullable = false)
     private LocalTime departureTime;
 
-    @Column(name = "running_date")
-    private LocalDate runningDate;
+//    @Column(name = "running_date")
+//    private LocalDate runningDate;
 
-    @Column(name = "base_fare")
+    @Column(name = "base_fare", nullable = false)
     private double baseFare;
 
     private boolean activeStatus;
 
-    @Column(name = "cancel_status")
     private boolean cancelStatus;
 
     @OneToMany(mappedBy = "train", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<BookingEntity> bookings = new HashSet<>();
+    private Set<BookingEntity> bookings;
 
     @ManyToOne
-    @JoinColumn(name = "route_id", foreignKey = @ForeignKey(name = "fk_train_route"))
+    @JoinColumn(name = "route_id", foreignKey = @ForeignKey(name = "route_id_fk"))
     private RouteEntity route;
 
-    @OneToOne(mappedBy = "train", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private CoachEntity coach;
+//    @OneToOne(mappedBy = "train", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+//    private CoachEntity coach;
 
-    @Enumerated(EnumType.STRING)
-    private Coaches coachType;
+//    @Enumerated(EnumType.STRING)
+//    private Coaches coachType;
 
-    @Column(name = "runs_on")
     private String runsOn;
 
-    @Column(name = "schedule_link")
-    private String scheduleLink;
+    @Column(name = "ac")
+    @Max(value = 200)
+    @Min(value = 100)
+    private Integer aC;
+    
+    @Max(value = 300)
+    @Min(value = 100)
+    private Integer sleeper;
+    
+    @Max(value = 100)
+    @Min(value = 50)
+    private Integer general;
+    
+//    @Column(name = "schedule_link")
+//    private String scheduleLink;
 
-    @Column(name = "departure_station")
-    private String departureStation;
+//    @Column(name = "departure_station")
+//    private String departureStation;
 
-    @Column(name = "arrival_station")
-    private String arrivalStation;
+//    @Column(name = "arrival_station")
+//    private String arrivalStation;
 
-    @Column(name = "duration")
-    private String duration;
+//    @Column(name = "duration")
+//    private String duration;
 }
