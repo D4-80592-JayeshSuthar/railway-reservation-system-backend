@@ -44,15 +44,26 @@ public class TrainController {
         return trainService.getAllTrains();
     }
     
+//    @GetMapping("/search")
+//    public List<SearchTrainDTO> viewTrainsBySrcAndDes(
+//    		@PathVariable("source") String src,
+//            @PathVariable("destination") String des,
+//            @PathVariable("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dateOfJourney) {
+//    	
+//        return trainService.getTrainsBySrcDescDate(src, des, dateOfJourney);
+//    }
+
+    
     @GetMapping("/search")
     public List<SearchTrainDTO> viewTrainsBySrcAndDes(
-    		@PathVariable("source") String src,
-            @PathVariable("destination") String des,
-            @PathVariable("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dateOfJourney) {
-    	
+            @RequestParam("source") String src,
+            @RequestParam("destination") String des,
+            @RequestParam("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dateOfJourney) {
+        
         return trainService.getTrainsBySrcDescDate(src, des, dateOfJourney);
     }
 
+    
     // Admin can add trains
     @PostMapping("/add")
    // @PreAuthorize("hasRole('ADMIN')")
