@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.app.dao.TrainDAO;
-import com.app.dto.TrainDTO;
+import com.app.dto.AddTrainDTO;
 import com.app.entities.TrainEntity;
 import com.app.exceptions.ResourceNotFoundException;
 import com.app.service.TrainService;
@@ -39,14 +39,14 @@ public class TrainController {
 
     // Any user can view the trains
     @GetMapping("/view")
-    public List<TrainDTO> viewTrains() {
+    public List<AddTrainDTO> viewTrains() {
         return trainService.getAllTrains();
     }
 
     // Admin can add trains
     @PostMapping("/add")
    // @PreAuthorize("hasRole('ADMIN')")
-    public TrainDTO addTrain(@Valid @RequestBody TrainDTO trainDTO) {
+    public AddTrainDTO addTrain(@Valid @RequestBody AddTrainDTO trainDTO) {
         return trainService.addTrain(trainDTO);
     }
 
@@ -73,7 +73,7 @@ public class TrainController {
  // Controller method to cancel a train and reschedule it to a particular date
     @PutMapping("/{trainNumber}/cancel")
     public ResponseEntity<String> cancelTrainAndReschedule(@PathVariable Long trainNumber, @RequestParam("rescheduleDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate rescheduleDate) {
-        trainService.cancelTrainAndReschedule(trainNumber, rescheduleDate);
+//        trainService.cancelTrainAndReschedule(trainNumber, rescheduleDate);
         return ResponseEntity.ok("Train canceled and rescheduled successfully");
     }
 
@@ -85,7 +85,7 @@ public class TrainController {
        
 		TrainEntity trainEntity = trainDAO.findById(trainNumber)
             .orElseThrow(() -> new ResourceNotFoundException("Train not found"));
-        trainService.scheduleTrainAfterJourneyCompletion(trainNumber, trainEntity.getRunsOn());
+//        trainService.scheduleTrainAfterJourneyCompletion(trainNumber, trainEntity.getRunsOn());
         return ResponseEntity.ok("Train scheduled after journey completion successfully");
     }
     

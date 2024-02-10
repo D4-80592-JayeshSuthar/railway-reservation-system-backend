@@ -35,9 +35,9 @@ import lombok.ToString;
 @AllArgsConstructor
 @Getter
 @Setter
-@ToString
-@AttributeOverride(name = "id", column = @Column(name = "pnr_number"))
-public class BookingEntity extends BaseEntity{
+//@ToString
+//@AttributeOverride(name = "id", column = @Column(name = "pnr_number"))
+public class BookingEntity{
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "pnr_sequence_generator")

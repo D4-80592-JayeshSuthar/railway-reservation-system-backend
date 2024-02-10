@@ -36,7 +36,7 @@ public class TicketServiceImpl implements TicketService {
 	
 	public static TicketEntity convertDtoToEntity(TicketDTO ticketDTO) {
         TicketEntity ticketEntity = new TicketEntity();
-        ticketEntity.setTicketId(ticketDTO.getTicketId());
+        ticketEntity.setId(ticketDTO.getTicketId());
         
         // Assuming you have a method to fetch BookingEntity by PNR number
         // For example: bookingRepository.findByPnrNumber(ticketDTO.getPnrNumber());
@@ -47,20 +47,20 @@ public class TicketServiceImpl implements TicketService {
         
         ticketEntity.setSeatNumber(ticketDTO.getSeatNumber());
         ticketEntity.setStatus(ticketDTO.getStatus());
-        ticketEntity.setPassengerName(ticketDTO.getPassengerName());
-        ticketEntity.setAadharNumber(ticketDTO.getAadharNumber());
+//        ticketEntity.setPassengerName(ticketDTO.getPassengerName());
+//        ticketEntity.setAadharNumber(ticketDTO.getAadharNumber());
         return ticketEntity;
     }
 	
-	public static TicketDTO convertEntityToDto(TicketEntity ticketEntity) {
-        return new TicketDTO(
-            ticketEntity.getTicketId(),
-            ticketEntity.getBooking() != null ? ticketEntity.getBooking().getPnrNumber() : null,
-            ticketEntity.getSeatNumber(),
-            ticketEntity.getStatus(),
-            ticketEntity.getPassengerName(),
-            ticketEntity.getAadharNumber()
-        );
-    }
+//	public static TicketDTO convertEntityToDto(TicketEntity ticketEntity) {
+//        return new TicketDTO(
+//            ticketEntity.getId(),
+//            ticketEntity.getBooking() != null ? ticketEntity.getBooking().getPnrNumber() : null,
+//            ticketEntity.getSeatNumber(),
+//            ticketEntity.getStatus(),
+//            ticketEntity.getPassengerName(),
+//            ticketEntity.getAadharNumber()
+//        );
+//    }
 
 }

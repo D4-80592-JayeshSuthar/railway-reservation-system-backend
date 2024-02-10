@@ -41,7 +41,7 @@ public class BookingServiceImpl implements BookingService {
 		List<BookingEntity> userBookings = bookingDao.findByUserId(userId);
 
 		for (BookingEntity booking : userBookings) {
-			booking.setTickets(ticketDao.findByBookingPnrNumber(booking.getPnrNumber()));
+//			booking.setTickets(ticketDao.findByBookingPnrNumber(booking.getPnrNumber()));
 		}
 		List<BookingDTO> userBookingDTOs = null;
 
@@ -65,7 +65,7 @@ public class BookingServiceImpl implements BookingService {
 		List<TicketEntity> ticketEntities = bookingDTO.getTickets().stream()
 				.map(ticketDTO -> TicketServiceImpl.convertDtoToEntity(ticketDTO)).collect(Collectors.toList());
 
-		bookingEntity.setTickets(ticketEntities);
+//		bookingEntity.setTickets(ticketEntities);
 
 		return bookingEntity;
 	}
@@ -81,10 +81,10 @@ public class BookingServiceImpl implements BookingService {
 		bookingDTO.setFrom(bookingEntity.getFromStation());
 		bookingDTO.setTo(bookingEntity.getToStation());
 
-		List<TicketDTO> ticketDTOs = bookingEntity.getTickets().stream()
-				.map(ticketEntity -> TicketServiceImpl.convertEntityToDto(ticketEntity)) // Assuming this method exists
-				.collect(Collectors.toList());
-		bookingDTO.setTickets(ticketDTOs); // This should be a Set<TicketDTO>, not Set<TicketEntity>
+//		List<TicketDTO> ticketDTOs = bookingEntity.getTickets().stream()
+//				.map(ticketEntity -> TicketServiceImpl.convertEntityToDto(ticketEntity)) // Assuming this method exists
+//				.collect(Collectors.toList());
+//		bookingDTO.setTickets(ticketDTOs); // This should be a Set<TicketDTO>, not Set<TicketEntity>
 
 		return bookingDTO;
 	}

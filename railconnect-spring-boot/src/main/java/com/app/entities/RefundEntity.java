@@ -38,5 +38,4 @@ public class RefundEntity extends BaseEntity{
 	
 	@Column(nullable = false)
 	private Double amount;
-	
 }

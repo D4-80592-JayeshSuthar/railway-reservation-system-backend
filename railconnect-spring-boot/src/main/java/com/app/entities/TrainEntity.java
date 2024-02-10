@@ -1,6 +1,7 @@
 package com.app.entities;
 
 import java.time.LocalTime;
+
 import java.util.Set;
 
 import javax.persistence.AttributeOverride;
@@ -23,7 +24,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 @Entity
 @Table(name = "trains")
@@ -31,13 +31,13 @@ import lombok.ToString;
 @AllArgsConstructor
 @Getter
 @Setter
-@ToString
-@AttributeOverride(name = "id", column = @Column(name = "train_number"))
-public class TrainEntity extends BaseEntity{
+//@ToString
+//@AttributeOverride(name = "id", column = @Column(name = "train_number"))
+public class TrainEntity{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "train_sequence_generator")
-	@SequenceGenerator(name = "train_sequence_generator", initialValue = 1000)
+	@SequenceGenerator(name = "train_sequence_generator", initialValue = 1100)
     private long trainNumber;
 
     @Column(name = "train_name", length = 20,nullable = false)
@@ -74,18 +74,17 @@ public class TrainEntity extends BaseEntity{
 
     private String runsOn;
 
-    @Column(name = "ac")
     @Max(value = 200)
     @Min(value = 100)
-    private Integer aC;
+    private Integer acSeats;
     
     @Max(value = 300)
     @Min(value = 100)
-    private Integer sleeper;
+    private Integer sleeperSeats;
     
     @Max(value = 100)
     @Min(value = 50)
-    private Integer general;
+    private Integer generalSeats;
     
 //    @Column(name = "schedule_link")
 //    private String scheduleLink;
