@@ -43,7 +43,7 @@ public class TicketServiceImpl implements TicketService {
         // If you don't have the BookingEntity yet, you can set just the PNR number in a placeholder or fetch the entity from the database if necessary
 //        BookingEntity booking = new BookingEntity(); // This should be fetched from the database
 //        booking.setPnrNumber(ticketDTO.getPnrNumber());
-        ticketEntity.setBooking(booking);
+//        ticketEntity.setBooking(booking);
         
         ticketEntity.setSeatNumber(ticketDTO.getSeatNumber());
         ticketEntity.setStatus(ticketDTO.getStatus());

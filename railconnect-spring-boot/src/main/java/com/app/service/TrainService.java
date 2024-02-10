@@ -143,7 +143,7 @@ public class TrainService {
         trainDTO.setBaseFare(trainEntity.getBaseFare());
         trainDTO.setActiveStatus(trainEntity.isActiveStatus());
         trainDTO.setCancelStatus(trainEntity.isCancelStatus());
-        trainDTO.setRouteId(trainEntity.getRoute().getId());
+        trainDTO.setRouteId(trainEntity.getRoute().getRouteId());
         trainDTO.setRunsOn(trainEntity.getRunsOn());
         trainDTO.setAcSeats(trainEntity.getAcSeats());
         trainDTO.setSleeperSeats(trainEntity.getSleeperSeats());
@@ -198,7 +198,7 @@ public class TrainService {
 				.substring(0,3);
 		RouteEntity route = routeDao.findBySourceAndDestination(src, des)
 				.orElseThrow(()-> new ResourceNotFoundException("Route not found"));
-		List<TrainEntity> trainEntities = trainDAO.findByRouteIdAndRunsOnDay(route.getId(), day);
+		List<TrainEntity> trainEntities = trainDAO.findByRouteIdAndRunsOnDay(route.getRouteId(), day);
 		List<SearchTrainDTO> searchTrains;
 		
 		//Conversion from Entities to DTOs

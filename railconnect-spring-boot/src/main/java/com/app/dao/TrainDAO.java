@@ -13,7 +13,7 @@ import org.springframework.data.repository.query.Param;
 
 public interface TrainDAO extends JpaRepository<TrainEntity, Long> {
 
-	@Query("SELECT t FROM TrainEntity t WHERE t.route.routeId = :routeId AND t.runsOn LIKE %:day%")
+	@Query("SELECT t FROM TrainEntity t WHERE t.route.routeId = :routeId AND t.runsOn LIKE CONCAT('%',:day,'%')")
 	List<TrainEntity> findByRouteIdAndRunsOnDay(Long routeId, String day);
 
 //	 @Query(value = "SELECT new com.app.dto.CoachCountDTO(t.trainNumber, t.dateOfJourney, t.acCount, t.sleeperCount, t.generalCount) FROM train_journey_coach_summary t WHERE t.trainNumber = :trainNumber AND t.dateOfJourney = :dateOfJourney", nativeQuery = true)

@@ -63,10 +63,10 @@ public class BookingServiceImpl implements BookingService {
 	public BookingEntity convertDtoToEntity(BookingDTO bookingDTO) {
 		BookingEntity bookingEntity = new BookingEntity();
 		bookingEntity.setPnrNumber(bookingDTO.getPnrNumber());
-		bookingEntity.setCoach(bookingDTO.getCoach());
+	//	bookingEntity.setCoach(bookingDTO.getCoach());
 		bookingEntity.setDateOfJourney(bookingDTO.getDateOfJourney());
-		bookingEntity.setFromStation(bookingDTO.getFrom());
-		bookingEntity.setToStation(bookingDTO.getTo());
+//		bookingEntity.setFromStation(bookingDTO.getFrom());
+//		bookingEntity.setToStation(bookingDTO.getTo());
 //		bookingEntity.setTrain(new TrainService().getTrainById(bookingDTO.getTrainNumber()));
 //		bookingEntity.setUser(new UserServiceImpl().getUserDetailsById(bookingDTO.getUserId()));
 
@@ -152,7 +152,7 @@ public class BookingServiceImpl implements BookingService {
 		
 		//Conversion to save the booking info in booking table
 		BookingEntity bookingEntity = convertDtoToEntity(booking);
-		BookingEntity newBooking = bookingDao.save(bookingEntity);
+		//BookingEntity newBooking = bookingDao.save(bookingEntity);
 		return convertEntityToDto(newBooking);
 	}
 

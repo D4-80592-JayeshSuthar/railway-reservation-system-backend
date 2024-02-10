@@ -1,5 +1,8 @@
 package com.app.entity;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import java.time.LocalDate;
 
 import org.junit.jupiter.api.Test;
@@ -9,14 +12,10 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.annotation.Rollback;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-
-
 
 import com.app.dao.UserEntityDao;
+import com.app.entities.Gender;
 import com.app.entities.UserEntity;
-import com.app.entities.UserEntity.Gender;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = Replace.NONE) // Use actual database for testing

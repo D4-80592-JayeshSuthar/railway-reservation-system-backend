@@ -1,5 +1,6 @@
 package com.app.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,7 @@ public class RouteService {
     
     public List<RouteDTO> getAllRoutes(){
     	List<RouteEntity> routeEntities = routeDAO.findAll();
-    	List<RouteDTO> routeDTOs = null;
+    	List<RouteDTO> routeDTOs = new ArrayList<RouteDTO>();
     	for (RouteEntity routeEntity : routeEntities) {
 			routeDTOs.add(convertToDTO(routeEntity));
 		}
@@ -33,7 +34,7 @@ public class RouteService {
 
     private RouteDTO convertToDTO(RouteEntity routeEntity) {
         RouteDTO routeDTO = new RouteDTO();
-        routeDTO.setRouteId(routeEntity.getId());
+        routeDTO.setRouteId(routeEntity.getRouteId());
         routeDTO.setSource(routeEntity.getSource());
         routeDTO.setDestination(routeEntity.getDestination());
 //        routeDTO.setIntermediate(routeEntity.getIntermediate());

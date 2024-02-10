@@ -5,7 +5,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Set;
 
-import javax.persistence.AttributeOverride;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -27,7 +26,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 @Entity
 @Table(name = "bookings")
@@ -63,6 +61,7 @@ public class BookingEntity{
 	@ManyToOne
 	@JoinColumn(name = "train_number_fk")
 	private TrainEntity train;
+	
 
 //	bcoz it can be computed using train_number
 //	@Transient // Marks this property as not persistent
