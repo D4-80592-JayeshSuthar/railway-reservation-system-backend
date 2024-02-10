@@ -1,5 +1,6 @@
 package com.app.service;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,10 +35,9 @@ public class TrainService {
 	@Autowired
 	private RouteDAO routeDao;
 
-	
 	@Autowired
-    private ModelMapper modelMapper; // Autowire ModelMapper
-	
+	private ModelMapper modelMapper; // Autowire ModelMapper
+
 	public List<AddTrainDTO> getAllTrains() {
 		return trainDAO.findAll().stream().map(this::convertToDTO).collect(Collectors.toList());
 	}
@@ -71,67 +71,115 @@ public class TrainService {
 		trainDAO.save(trainEntity);
 	}
 
-	// Service method to cancel a train and reschedule it to a particular date
-//    public void cancelTrainAndReschedule(Long trainNumber, LocalDate rescheduleDate) {
-//        TrainEntity trainEntity = trainDAO.findById(trainNumber)
-//            .orElseThrow(() -> new ResourceNotFoundException("Train not found"));
-//        
-//        // Set cancelStatus and activeStatus
-//        trainEntity.setCancelStatus(true);
-//        trainEntity.setActiveStatus(false);
-//        
-//        // Reschedule the train to the provided date
-//        trainEntity.setRunningDate(rescheduleDate);
-//        
-//        // Save the updated trainEntity
-//        trainDAO.save(trainEntity);
-//    }
-
-//    public void scheduleTrainAfterJourneyCompletion(Long trainNumber, String runsOn) {
-	// Logic to calculate the next running date based on runsOn and current date
-//        LocalDate nextRunningDate = calculateNextRunningDate(runsOn);
-//        
-//        TrainEntity trainEntity = trainDAO.findById(trainNumber)
-//            .orElseThrow(() -> new ResourceNotFoundException("Train not found"));
-//        
-//        // Update the running date of the train
-//        trainEntity.setRunningDate(nextRunningDate);
-//        
-//        // Set cancelStatus to false and activeStatus to true
-//        trainEntity.setCancelStatus(false);
-//        trainEntity.setActiveStatus(true);
-//        
-//        // Save the updated trainEntity
-//        trainDAO.save(trainEntity);
-//    }
-//    
-//    private LocalDate calculateNextRunningDate(String runsOn) {
-	// Logic to calculate the next running date based on runsOn and current date
-	// Implement your logic here
-//        return LocalDate.now().plusDays(7); // Example: Adding 7 days for weekly scheduling
-//    }
 
 	// Method to toggle the status of a train when it starts running
-//    public void toggleTrainStatusWhenRunning() {
-	// Get all trains from the database
-//        List<TrainEntity> allTrains = trainDAO.findAll();
-//
-//        // Iterate over each train
-//        for (TrainEntity train : allTrains) {
-//            // Check if the train is canceled and inactive
-//            if (train.isCancelStatus() && !train.isActiveStatus()) {
-//                // Check if the current date matches the scheduled running date
-//                if (LocalDate.now().isEqual(train.getRunningDate())) {
-//                    // Toggle the cancelStatus to false and activeStatus to true
-//                    train.setCancelStatus(false);
-//                    train.setActiveStatus(true);
-//
-//                    // Save the updated train entity
-//                    trainDAO.save(train);
-//                }
-//            }
-//        }
-//    }
+	public void toggleTrainStatusWhenRunning() {
+	    // Get all trains from the database
+	    List<TrainEntity> allTrains = trainDAO.findAll();
+
+	    // Iterate over each train
+	    for (TrainEntity train : allTrains) {
+	        // Check if the train is canceled and inactive
+	        if (train.isCancelStatus() && !train.isActiveStatus()) {
+	            // Get the current day of the week
+	            DayOfWeek currentDayOfWeek = LocalDate.now().getDayOfWeek();
+
+	            // Split the runsOn string into individual days
+	            String[] runDays = train.getRunsOn().split(",");
+
+	            // Check if the current day is in the list of run days
+	            for (String runDay : runDays) {
+	                if (getDayOfWeekFromString(runDay) == currentDayOfWeek) {
+	                    // Toggle the cancelStatus to false and activeStatus to true
+	                    train.setCancelStatus(false);
+	                    train.setActiveStatus(true);
+
+	                    // Save the updated train entity
+	                    trainDAO.save(train);
+	                    break; // Exit the loop once status is updated
+	                }
+	            }
+	        }
+	    }
+	}
+
+	// Service method to cancel a train and reschedule it to a particular day of the week
+	public void cancelTrainAndReschedule(Long trainNumber, String rescheduleDay) {
+	    TrainEntity trainEntity = trainDAO.findById(trainNumber)
+	            .orElseThrow(() -> new ResourceNotFoundException("Train not found"));
+
+	    // Set cancelStatus and activeStatus
+	    trainEntity.setCancelStatus(true);
+	    trainEntity.setActiveStatus(false);
+
+	    // Reschedule the train to the provided day of the week
+	    trainEntity.setRunsOn(rescheduleDay);
+
+	    // Save the updated trainEntity
+	    trainDAO.save(trainEntity);
+	}
+
+	// Service method to schedule a train after journey completion
+	public void scheduleTrainAfterJourneyCompletion(Long trainNumber, String runsOn) {
+	    // Calculate the next running day based on runsOn and current day
+	    String nextRunningDay = calculateNextRunningDay(runsOn);
+
+	    TrainEntity trainEntity = trainDAO.findById(trainNumber)
+	            .orElseThrow(() -> new ResourceNotFoundException("Train not found"));
+
+	    // Update the runsOn field of the train
+	    trainEntity.setRunsOn(nextRunningDay);
+
+	    // Set cancelStatus to false and activeStatus to true
+	    trainEntity.setCancelStatus(false);
+	    trainEntity.setActiveStatus(true);
+
+	    // Save the updated trainEntity
+	    trainDAO.save(trainEntity);
+	}
+
+	// Method to calculate the next running day based on runsOn field
+	private String calculateNextRunningDay(String runsOn) {
+	    // Get the current day of the week
+	    DayOfWeek currentDayOfWeek = LocalDate.now().getDayOfWeek();
+
+	    // Split the runsOn string into individual days
+	    String[] runDays = runsOn.split(",");
+
+	    // Find the next running day after the current day
+	    for (String runDay : runDays) {
+	        DayOfWeek nextDay = getDayOfWeekFromString(runDay);
+	        if (nextDay.compareTo(currentDayOfWeek) > 0) {
+	            return nextDay.toString();
+	        }
+	    }
+
+	    // If no future running day found, return the first day of the week
+	    return getDayOfWeekFromString(runDays[0]).toString();
+	}
+
+	// Helper method to convert day name string to DayOfWeek enum
+	private DayOfWeek getDayOfWeekFromString(String day) {
+	    switch (day.toLowerCase()) {
+	        case "mon":
+	            return DayOfWeek.MONDAY;
+	        case "tue":
+	            return DayOfWeek.TUESDAY;
+	        case "wed":
+	            return DayOfWeek.WEDNESDAY;
+	        case "thu":
+	            return DayOfWeek.THURSDAY;
+	        case "fri":
+	            return DayOfWeek.FRIDAY;
+	        case "sat":
+	            return DayOfWeek.SATURDAY;
+	        case "sun":
+	            return DayOfWeek.SUNDAY;
+	        default:
+	            throw new IllegalArgumentException("Invalid day of week: " + day);
+	    }
+	}
+
 
 	private AddTrainDTO convertToDTO(TrainEntity trainEntity) {
 		AddTrainDTO trainDTO = new AddTrainDTO();
@@ -192,53 +240,55 @@ public class TrainService {
 		return trainEntity;
 	}
 
-  public List<SearchTrainDTO> getTrainsBySrcDescDate(String src, String des, LocalDate dateOfJourney) {
-        String day = dateOfJourney.getDayOfWeek().toString().substring(0, 3);
+	public List<SearchTrainDTO> getTrainsBySrcDescDate(String src, String des, LocalDate dateOfJourney) {
+		String day = dateOfJourney.getDayOfWeek().toString().substring(0, 3);
 
-        RouteEntity route = routeDao.findBySourceAndDestination(src, des)
-                .orElseThrow(() -> new ResourceNotFoundException("Route not found"));
+		RouteEntity route = routeDao.findBySourceAndDestination(src, des)
+				.orElseThrow(() -> new ResourceNotFoundException("Route not found"));
 
-        List<TrainEntity> trainEntities = trainDAO.findByRouteIdAndRunsOnDay(route.getRouteId(), day);
+		List<TrainEntity> trainEntities = trainDAO.findByRouteIdAndRunsOnDay(route.getRouteId(), day);
 
-        List<SearchTrainDTO> searchTrains = new ArrayList<>();
+		List<SearchTrainDTO> searchTrains = new ArrayList<>();
 
-        if (!trainEntities.isEmpty()) {
-            for (TrainEntity trainEntity : trainEntities) {
-                SearchTrainDTO searchTrain = modelMapper.map(trainEntity, SearchTrainDTO.class); // Utilize ModelMapper
-                searchTrain.setSource(src);
-                searchTrain.setDestination(des);
-                searchTrain.setDateOfJourney(dateOfJourney.toString());
+		if (!trainEntities.isEmpty()) {
+			for (TrainEntity trainEntity : trainEntities) {
+				SearchTrainDTO searchTrain = modelMapper.map(trainEntity, SearchTrainDTO.class); // Utilize ModelMapper
+				searchTrain.setSource(src);
+				searchTrain.setDestination(des);
+				searchTrain.setDateOfJourney(dateOfJourney.toString());
 
-                Optional<Object[]> seatsOptional = trainDAO
-                        .findCoachCountsByTrainNumberAndDateOfJourney(trainEntity.getTrainNumber(), dateOfJourney);
+				Optional<Object[]> seatsOptional = trainDAO
+						.findCoachCountsByTrainNumberAndDateOfJourney(trainEntity.getTrainNumber(), dateOfJourney);
 
-                if (seatsOptional.isPresent()) {
-                    Object[] seats = seatsOptional.get();
-                    if (seats.length > 0) {
-                        SeatAvailabilityDTO seatAvailabilityDTO = new SeatAvailabilityDTO();
-                        seatAvailabilityDTO.setTrainNumber((Long) seats[0]);
-                        seatAvailabilityDTO.setDateOfJourney((LocalDate) seats[1]);
-                        seatAvailabilityDTO.setAcCount((Integer) seats[2]);
-                        seatAvailabilityDTO.setSleeperCount((Integer) seats[3]);
-                        seatAvailabilityDTO.setGeneralCount((Integer) seats[4]);
+				if (seatsOptional.isPresent()) {
+					Object[] seats = seatsOptional.get();
+					if (seats.length > 0) {
+						SeatAvailabilityDTO seatAvailabilityDTO = new SeatAvailabilityDTO();
+						seatAvailabilityDTO.setTrainNumber((Long) seats[0]);
+						seatAvailabilityDTO.setDateOfJourney((LocalDate) seats[1]);
+						seatAvailabilityDTO.setAcCount((Integer) seats[2]);
+						seatAvailabilityDTO.setSleeperCount((Integer) seats[3]);
+						seatAvailabilityDTO.setGeneralCount((Integer) seats[4]);
 
-                        searchTrain.setAcSeats(trainEntity.getAcSeats() - seatAvailabilityDTO.getAcCount());
-                        searchTrain.setSleeperSeats(trainEntity.getSleeperSeats() - seatAvailabilityDTO.getSleeperCount());
-                        searchTrain.setGeneralSeats(trainEntity.getGeneralSeats() - seatAvailabilityDTO.getGeneralCount());
-                    } else {
-                        // Handle no seat availability data
-                    }
-                } else {
-                    // Handle no seat availability data
-                }
+						searchTrain.setAcSeats(trainEntity.getAcSeats() - seatAvailabilityDTO.getAcCount());
+						searchTrain
+								.setSleeperSeats(trainEntity.getSleeperSeats() - seatAvailabilityDTO.getSleeperCount());
+						searchTrain
+								.setGeneralSeats(trainEntity.getGeneralSeats() - seatAvailabilityDTO.getGeneralCount());
+					} else {
+						// Handle no seat availability data
+					}
+				} else {
+					// Handle no seat availability data
+				}
 
-                searchTrains.add(searchTrain);
-            }
-        } else {
-            // Handle no trains found
-        }
+				searchTrains.add(searchTrain);
+			}
+		} else {
+			// Handle no trains found
+		}
 
-        return searchTrains;
-    }
+		return searchTrains;
+	}
 
 }

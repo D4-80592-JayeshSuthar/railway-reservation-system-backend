@@ -13,9 +13,9 @@ public class TrainStatusScheduler {
         this.trainService = trainService;
     }
 
-    // Scheduled task to toggle train statuses when they start running
-//    @Scheduled(cron = "0 0 * * * *") // Runs every hour
-//    public void toggleTrainStatus() {
-//        trainService.toggleTrainStatusWhenRunning();
-//    }
+//     Scheduled task to toggle train statuses when they start running
+    @Scheduled(cron = "0 0 * * * *") // Runs every hour
+    public void toggleTrainStatus() {
+        trainService.toggleTrainStatusWhenRunning();
+    }
 }

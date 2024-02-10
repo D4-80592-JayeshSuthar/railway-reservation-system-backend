@@ -80,35 +80,59 @@ public class TrainController {
 //        trainService.cancelTrain(trainNumber);
 //    }
     
+    
+//    // Admin can remove trains (make them inactive)
+//    @DeleteMapping("/remove/{trainNumber}")
+//    //@PreAuthorize("hasRole('ADMIN')")
+//    public void removeTrain(@PathVariable long trainNumber) {
+//    	trainService.removeTrain(trainNumber);
+//    }
+//    
+//    
+//    
+// // Controller method to cancel a train and reschedule it to a particular date
+//    @PutMapping("/{trainNumber}/cancel")
+//    public ResponseEntity<String> cancelTrainAndReschedule(@PathVariable Long trainNumber, @RequestParam("rescheduleDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate rescheduleDate) {
+////        trainService.cancelTrainAndReschedule(trainNumber, rescheduleDate);
+//        return ResponseEntity.ok("Train canceled and rescheduled successfully");
+//    }
+//
+//
+//    
+//    // Controller method to schedule a train after journey completion according to respective days
+//    @PutMapping("/{trainNumber}/schedule")
+//    public ResponseEntity<String> scheduleTrainAfterJourneyCompletion(@PathVariable Long trainNumber) {
+//       
+//		TrainEntity trainEntity = trainDAO.findById(trainNumber)
+//            .orElseThrow(() -> new ResourceNotFoundException("Train not found"));
+////        trainService.scheduleTrainAfterJourneyCompletion(trainNumber, trainEntity.getRunsOn());
+//        return ResponseEntity.ok("Train scheduled after journey completion successfully");
+//    }
+    
     //-----------------------------------------------------------------------------
+ 
     
     // Admin can remove trains (make them inactive)
     @DeleteMapping("/remove/{trainNumber}")
     //@PreAuthorize("hasRole('ADMIN')")
     public void removeTrain(@PathVariable long trainNumber) {
-    	trainService.removeTrain(trainNumber);
+        trainService.removeTrain(trainNumber);
     }
-    
-    
-    
- // Controller method to cancel a train and reschedule it to a particular date
+
+    // Controller method to cancel a train and reschedule it to a particular date
     @PutMapping("/{trainNumber}/cancel")
     public ResponseEntity<String> cancelTrainAndReschedule(@PathVariable Long trainNumber, @RequestParam("rescheduleDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate rescheduleDate) {
-//        trainService.cancelTrainAndReschedule(trainNumber, rescheduleDate);
+        trainService.cancelTrainAndReschedule(trainNumber, rescheduleDate.getDayOfWeek().toString());
         return ResponseEntity.ok("Train canceled and rescheduled successfully");
     }
 
-
-    
     // Controller method to schedule a train after journey completion according to respective days
     @PutMapping("/{trainNumber}/schedule")
     public ResponseEntity<String> scheduleTrainAfterJourneyCompletion(@PathVariable Long trainNumber) {
-       
-		TrainEntity trainEntity = trainDAO.findById(trainNumber)
+        TrainEntity trainEntity = trainDAO.findById(trainNumber)
             .orElseThrow(() -> new ResourceNotFoundException("Train not found"));
-//        trainService.scheduleTrainAfterJourneyCompletion(trainNumber, trainEntity.getRunsOn());
+        trainService.scheduleTrainAfterJourneyCompletion(trainNumber, trainEntity.getRunsOn());
         return ResponseEntity.ok("Train scheduled after journey completion successfully");
     }
-    
     
 }
