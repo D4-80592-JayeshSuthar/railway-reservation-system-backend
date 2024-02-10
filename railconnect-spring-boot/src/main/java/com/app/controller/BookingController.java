@@ -34,7 +34,7 @@ public class BookingController {
 		return bookingService.showAllBookings();
 	}
 	
-	@PostMapping("/addbooking")
+	@PostMapping("/addnewbooking")
 	public BookingDTO bookTicktes(@RequestBody BookingDTO bookinDto) {
 		return bookingService.addNewBooking(bookinDto);
 	}

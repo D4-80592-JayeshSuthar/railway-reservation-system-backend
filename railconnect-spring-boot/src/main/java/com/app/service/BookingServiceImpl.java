@@ -4,6 +4,7 @@ import java.util.List;
 //import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.apache.catalina.startup.UserDatabase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,11 +12,15 @@ import org.springframework.transaction.annotation.Transactional;
 import com.app.dao.BookingDAO;
 //import com.app.dao.RouteDAO;
 import com.app.dao.TicketDAO;
+import com.app.dao.TrainDAO;
+import com.app.dao.UserEntityDao;
 //import com.app.dao.TrainDAO;
 import com.app.dto.BookingDTO;
 import com.app.dto.TicketDTO;
 import com.app.entities.BookingEntity;
+import com.app.entities.Coaches;
 import com.app.entities.TicketEntity;
+import com.app.exceptions.ResourceNotFoundException;
 
 
 @Service
@@ -31,8 +36,11 @@ public class BookingServiceImpl implements BookingService {
 //	@Autowired
 //	private RouteDAO routeDao;
 //
-//	@Autowired
-//	private TrainDAO trainDao;
+	@Autowired
+	private TrainDAO trainDao;
+	
+	@Autowired
+	private UserEntityDao userDao;
 
 	@SuppressWarnings("null")
 	@Override
@@ -74,12 +82,12 @@ public class BookingServiceImpl implements BookingService {
 	public BookingDTO convertEntityToDto(BookingEntity bookingEntity) {
 		BookingDTO bookingDTO = new BookingDTO();
 		bookingDTO.setPnrNumber(bookingEntity.getPnrNumber());
-		bookingDTO.setCoach(bookingEntity.getCoach());
+//		bookingDTO.setCoach(bookingEntity.getCoach());
 		bookingDTO.setUserId(bookingEntity.getUser().getId());
 		bookingDTO.setTrainNumber(bookingEntity.getTrain().getTrainNumber());
 		bookingDTO.setDateOfJourney(bookingEntity.getDateOfJourney());
-		bookingDTO.setFrom(bookingEntity.getFromStation());
-		bookingDTO.setTo(bookingEntity.getToStation());
+//		bookingDTO.setFrom(bookingEntity.getFromStation());
+//		bookingDTO.setTo(bookingEntity.getToStation());
 
 //		List<TicketDTO> ticketDTOs = bookingEntity.getTickets().stream()
 //				.map(ticketEntity -> TicketServiceImpl.convertEntityToDto(ticketEntity)) // Assuming this method exists
@@ -103,10 +111,44 @@ public class BookingServiceImpl implements BookingService {
 
 	@Override
 	public BookingDTO addNewBooking(BookingDTO booking) {
+		
+		BookingEntity newBooking = new BookingEntity();
+		newBooking.setBookingDateTime(booking.getBookingDateTime());
+		newBooking.setCoach(Coaches.valueOf(booking.getCoachType()));
+		newBooking.setDateOfJourney(booking.getDateOfJourney());
+		newBooking.setFromStation(booking.getFromStation());
+		newBooking.setToStation(booking.getToStation());
+		newBooking.setTotalAmount(booking.getTotalAmount());
+		newBooking.setTrain(trainDao.findById(booking.getTrainNumber())
+				.orElseThrow(() -> new ResourceNotFoundException("Train not found")));
+		newBooking.setUser(userDao.findById(booking.getUserId())
+				.orElseThrow(() -> new ResourceNotFoundException("User not found")));
+		
+		bookingDao.save(newBooking);
 		List<TicketDTO> tickets = booking.getTickets();
+		Integer seats = booking.getSeats();
+		//add tickets to database
 		for (TicketDTO ticketDTO : tickets) {
-			ticketDao.save(TicketServiceImpl.convertDtoToEntity(ticketDTO));
-		} // to save the tickets first in the ticket table 
+
+			TicketEntity newTicket = new TicketEntity();
+			newTicket.setBooking(newBooking);
+			newTicket.setStatus(ticketDTO.getStatus());
+			String seatNo = null;
+			if(ticketDTO.getStatus().equals("WAITING")) {
+				seatNo = "NA";
+			}else {
+				seatNo = booking.getCoachType().substring(0,2).toUpperCase() +
+						seats++;
+			}	
+			ticketDao.save(newTicket);
+			
+			//Save Passenger -> PassengerDao I/f
+		}
+		
+		
+//		for (TicketDTO ticketDTO : tickets) {
+//			ticketDao.save(TicketServiceImpl.convertDtoToEntity(ticketDTO));
+//		} // to save the tickets first in the ticket table 
 		
 		//Conversion to save the booking info in booking table
 		BookingEntity bookingEntity = convertDtoToEntity(booking);

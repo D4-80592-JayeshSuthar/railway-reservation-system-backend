@@ -63,3 +63,86 @@ VALUES
 (3, 345678901234, 'Alice Johnson', 'C3', 'CONFIRM', 3456789012); -- pnr_number 3456789012 from bookings table
 
 
+----------------------------------------------------------------------------------------------------------------------------------
+
+
+show databases;
+use rail;
+show tables;
+drop database rail;
+drop table secure_users;
+desc pnr;
+desc admin;
+desc users;
+desc trains;
+desc bookings;
+desc tickets;
+desc routes;
+desc passengers;
+desc refunds;
+desc waiting_list;
+desc train_sequence_generator;
+
+INSERT INTO routes (destination, source) 
+VALUES 
+( 'Mumbai', 'Chennai'),
+( 'Delhi', 'Mumbai'),
+('Kolkata', 'Delhi'),
+('Banglore', 'Pune');
+select * from routes;
+
+INSERT INTO trains (train_number, train_name, arrival_time, departure_time, base_fare, active_status, cancel_status, runs_on, route_id,
+ ac_seats, sleeper_seats, general_seats) 
+VALUES 
+(1001,'Duranto', '09:00:00', '20:00:00', 250.00, 1,  0, 'Mon,Wed,Fri', 1, 150, 150, 75),
+(1002,'RajDhani', '02:00:00', '22:00:00', 300.00, 1,  0, 'Mon,Thu', 1, 200, 150, 60),
+(1003,'GaribRath', '07:00:00', '18:00:00', 100.00, 1,  0, 'Tue,Thu,Sat', 1, 100, 200, 100);
+select * from trains;
+
+insert into bookings(pnr_number,coach, date_of_journey,from_station,to_station,train_number,user_id) 
+values (123456,'FirstClass','2024-11-11','mumbai','pune',789456,1);
+
+CREATE VIEW tickets_bookings_view AS
+SELECT
+    t.ticket_id,
+    t.seat_number,
+    t.status AS ticket_status,
+    t.passenger_id_fk AS passenger_id,
+    b.pnr_number,
+    b.coach,
+    b.user_id_fk AS booking_user_id,
+    b.train_number_fk AS booking_train_number,
+    b.date_of_journey,
+    b.booking_date_time,
+    b.from_station,
+    b.to_station,
+    b.total_amount
+FROM
+    tickets t
+JOIN
+    bookings b ON t.pnr_number = b.pnr_number;
+    
+    desc tickets_bookings_view;
+    select * from tickets_bookings_view;
+    
+
+CREATE VIEW train_journey_coach_summary AS
+SELECT
+    tbv.booking_train_number AS train_number,
+    tbv.date_of_journey,
+    SUM(CASE WHEN tbv.coach = 'AC' THEN 1 ELSE 0 END) AS ac_count,
+    SUM(CASE WHEN tbv.coach = 'Sleeper' THEN 1 ELSE 0 END) AS sleeper_count,
+    SUM(CASE WHEN tbv.coach = 'General' THEN 1 ELSE 0 END) AS general_count
+FROM
+    tickets_bookings_view tbv
+GROUP BY
+    tbv.booking_train_number,
+    tbv.date_of_journey;
+    
+    desc train_journey_coach_summary;
+    select * from train_journey_coach_summary;
+
+show tables;
+	
+
+

@@ -12,8 +12,11 @@ import org.springframework.stereotype.Service;
 import com.app.dao.RouteDAO;
 import com.app.dao.TrainDAO;
 import com.app.dto.CoachDTO;
+import com.app.dto.SearchTrainDTO;
+import com.app.dto.SeatAvailabilityDTO;
 import com.app.dto.AddTrainDTO;
 import com.app.entities.Coaches;
+import com.app.entities.RouteEntity;
 import com.app.entities.TrainEntity;
 import com.app.exceptions.ResourceNotFoundException;
 
@@ -188,6 +191,39 @@ public class TrainService {
 
         return trainEntity;
     }
+
+	public List<SearchTrainDTO> getTrainsBySrcDescDate(String src, String des, LocalDate dateOfJourney) {
+		String day = dateOfJourney.getDayOfWeek()
+				.toString()
+				.substring(0,3);
+		RouteEntity route = routeDao.findBySourceAndDestination(src, des)
+				.orElseThrow(()-> new ResourceNotFoundException("Route not found"));
+		List<TrainEntity> trainEntities = trainDAO.findByRouteIdAndRunsOnDay(route.getId(), day);
+		List<SearchTrainDTO> searchTrains;
+		
+		//Conversion from Entities to DTOs
+		for (TrainEntity trainEntity : trainEntities) {
+			SearchTrainDTO searchTrain = new SearchTrainDTO();
+			searchTrain.setTrainNumber(trainEntity.getTrainNumber());
+			searchTrain.setTrainName(trainEntity.getTrainName());
+			searchTrain.setArrivalTime(trainEntity.getArrivalTime());
+			searchTrain.setDepartureTime(trainEntity.getDepartureTime());
+			searchTrain.setBaseFare(trainEntity.getBaseFare());
+			searchTrain.setRunsOn(trainEntity.getRunsOn());
+			searchTrain.setSource(src);
+			searchTrain.setDestination(des);
+			searchTrain.setDateOfJourney(dateOfJourney.toString());
+			
+			SeatAvailabilityDTO seats = trainDAO
+					.findCoachCountsByTrainNumberAndDateOfJourney(trainEntity.getTrainNumber(), dateOfJourney)
+					.orElseThrow(() -> new ResourceNotFoundException("seats not available"));
+			searchTrain.setAcSeats(trainEntity.getAcSeats() - seats.getAcCount());
+			searchTrain.setSleeperSeats(trainEntity.getSleeperSeats() - seats.getSleeperCount());
+			searchTrain.setGeneralSeats(trainEntity.getGeneralSeats() - seats.getGeneralCount());
+		}
+		
+		return null;
+	}
 
 
 }

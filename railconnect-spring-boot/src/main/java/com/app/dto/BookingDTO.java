@@ -1,6 +1,7 @@
 package com.app.dto;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import com.app.entities.Coaches;
@@ -18,11 +19,13 @@ import lombok.Setter;
 public class BookingDTO {	
 	private Long pnrNumber;
 	private List<TicketDTO> tickets;
-	private Coaches coach;
+	private String coachType;
 	private Long userId; 
 	private Long trainNumber;
-	private String from;
-	private String to;
+	private String fromStation;
+	private String toStation;
+	private LocalDateTime bookingDateTime;
 	private LocalDate dateOfJourney;
-
+	private Double totalAmount;
+	private Integer Seats;
 }

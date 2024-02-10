@@ -1,5 +1,7 @@
 package com.app.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +20,15 @@ public class RouteService {
         RouteEntity routeEntity = routeDAO.findById(routeId)
                                           .orElseThrow(() -> new ResourceNotFoundException("Route not found"));
         return convertToDTO(routeEntity);
+    }
+    
+    public List<RouteDTO> getAllRoutes(){
+    	List<RouteEntity> routeEntities = routeDAO.findAll();
+    	List<RouteDTO> routeDTOs = null;
+    	for (RouteEntity routeEntity : routeEntities) {
+			routeDTOs.add(convertToDTO(routeEntity));
+		}
+    	return routeDTOs;
     }
 
     private RouteDTO convertToDTO(RouteEntity routeEntity) {

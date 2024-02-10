@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.app.dao.TrainDAO;
 import com.app.dto.AddTrainDTO;
+import com.app.dto.SearchTrainDTO;
 import com.app.entities.TrainEntity;
 import com.app.exceptions.ResourceNotFoundException;
 import com.app.service.TrainService;
@@ -41,6 +42,15 @@ public class TrainController {
     @GetMapping("/view")
     public List<AddTrainDTO> viewTrains() {
         return trainService.getAllTrains();
+    }
+    
+    @GetMapping("/search")
+    public List<SearchTrainDTO> viewTrainsBySrcAndDes(
+    		@PathVariable("source") String src,
+            @PathVariable("destination") String des,
+            @PathVariable("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dateOfJourney) {
+    	
+        return trainService.getTrainsBySrcDescDate(src, des, dateOfJourney);
     }
 
     // Admin can add trains

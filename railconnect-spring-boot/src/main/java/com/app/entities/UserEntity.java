@@ -76,9 +76,4 @@ public class UserEntity {
 		this.isActive = isActive;
 	}
 
-	public enum Gender {
-        MALE, FEMALE, OTHER
-    }
-    
-    
 }

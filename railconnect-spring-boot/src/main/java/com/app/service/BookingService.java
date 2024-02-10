@@ -15,4 +15,5 @@ public interface BookingService {
 	List<BookingDTO> showAllBookings();
 	
 	BookingDTO addNewBooking(BookingDTO booking);
+	
 }
