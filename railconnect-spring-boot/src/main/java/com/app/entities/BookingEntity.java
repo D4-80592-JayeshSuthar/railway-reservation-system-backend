@@ -52,7 +52,7 @@ public class BookingEntity{
 	
 	@Enumerated(EnumType.STRING)
 	@Column(name = "coach")
-	private Coaches coach;
+	private Coaches coachType;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id_fk")

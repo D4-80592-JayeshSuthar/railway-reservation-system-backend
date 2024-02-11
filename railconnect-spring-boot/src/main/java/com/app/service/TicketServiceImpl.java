@@ -62,5 +62,14 @@ public class TicketServiceImpl implements TicketService {
 //            ticketEntity.getAadharNumber()
 //        );
 //    }
+	
+	public static TicketDTO convertEntityToDto(TicketEntity ticketEntity) {
+        TicketDTO ticketDTO = new TicketDTO();
+        ticketDTO.setTicketId(ticketEntity.getId());
+        ticketDTO.setSeatNumber(ticketEntity.getSeatNumber());
+        ticketDTO.setStatus(ticketEntity.getStatus());
+        // If needed, map other attributes from TicketEntity to TicketDTO
+        return ticketDTO;
+    }
 
 }

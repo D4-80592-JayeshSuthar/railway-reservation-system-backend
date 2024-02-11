@@ -18,6 +18,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class BookingDTO {	
 	private Long pnrNumber;
+    private List<PassengerDTO> passengers; // Add this field for passengers
 	private List<TicketDTO> tickets;
 	private String coachType;
 	private Long userId; 
@@ -27,5 +28,5 @@ public class BookingDTO {
 	private LocalDateTime bookingDateTime;
 	private LocalDate dateOfJourney;
 	private Double totalAmount;
-	private Integer Seats;
+	private Integer seats;
 }

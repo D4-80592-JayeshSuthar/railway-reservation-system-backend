@@ -41,7 +41,7 @@ public class SecurityConfig {
 		.exceptionHandling().authenticationEntryPoint(authEntry).
 		and().
 		authorizeRequests()
-		.antMatchers("/users/*/status/active","/users/*/status/inactive","/users/images/*","/trains/*/schedule",
+		.antMatchers("/bookings/mybookings","/bookings/addnewbooking","/bookings/allbookings","/users/*/status/active","/users/*/status/inactive","/users/images/*","/trains/*/schedule",
 				"/trains/*/cancel","/trains/add","/trains/remove/*","/trains/search","/trains/view","/users/signup",
 				"/users/signin","/users/by-userid/*",
 				"/users/by-email/*","/users/by-username/*"
