@@ -18,6 +18,7 @@ import com.app.dao.UserEntityDao;
 //import com.app.dao.TrainDAO;
 import com.app.dto.BookingDTO;
 import com.app.dto.PassengerDTO;
+import com.app.dto.SeatDTO;
 import com.app.dto.TicketDTO;
 import com.app.entities.BookingEntity;
 import com.app.entities.PassengerEntity;
@@ -47,6 +48,9 @@ public class BookingServiceImpl implements BookingService {
 
 	@Autowired
 	private UserEntityDao userDao;
+	
+
+
 
 	@SuppressWarnings("null")
 	@Override
@@ -174,6 +178,22 @@ public class BookingServiceImpl implements BookingService {
 	    return savedBookingDTO;
 	}
 
+	
+
+//    @Override
+//    public List<PassengerDTO> getPassengersByPnrNumber(Long pnrNumber) {
+//        return bookingDao.getPassengersByPnrNumber(pnrNumber);
+//    }
+
+//    @Override
+//    public Long getTrainNumberByPnrNumber(Long pnrNumber) {
+//        return bookingDao.getTrainNumberByPnrNumber(pnrNumber);
+//    }
+
+//    @Override
+//    public List<SeatDTO> getSeatsByPnrNumber(Long pnrNumber) {
+//        return bookingDao.getSeatsByPnrNumber(pnrNumber);
+//    }
 	
 //	@Override
 //	public BookingDTO addNewBooking(BookingDTO booking) {

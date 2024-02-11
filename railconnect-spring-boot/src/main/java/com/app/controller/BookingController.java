@@ -26,14 +26,39 @@ public class BookingController {
 	@Autowired
 	private BookingService bookingService;
 
+//	@GetMapping("/mybookings")
+//	public List<BookingDTO> showMyBookings(@RequestHeader("userId") Long userId) {
+//		return bookingService.findUserBookings(userId);
+//	}
+	
 	@GetMapping("/mybookings")
 	public List<BookingDTO> showMyBookings(@RequestHeader("userId") Long userId) {
-		return bookingService.findUserBookings(userId);
+	    List<BookingDTO> bookings = bookingService.findUserBookings(userId);
+	    // Populate passenger details, user ID, train number, and seat information for each booking
+	    for (BookingDTO booking : bookings) {
+//	        booking.setPassengers(bookingService.getPassengersByPnrNumber(booking.getPnrNumber()));
+	        booking.setUserId(userId);
+//	        booking.setTrainNumber(bookingService.getTrainNumberByPnrNumber(booking.getPnrNumber()));
+//	        booking.setSeats(bookingService.getSeatsByPnrNumber(booking.getPnrNumber()));
+	    }
+	    return bookings;
 	}
 
+//	@GetMapping("/allbookings")
+//	public List<BookingDTO> showAllBookings() {
+//		return bookingService.showAllBookings();
+//	}
+	
 	@GetMapping("/allbookings")
 	public List<BookingDTO> showAllBookings() {
-		return bookingService.showAllBookings();
+	    List<BookingDTO> bookings = bookingService.showAllBookings();
+	    // Populate passenger details, user ID, train number, and seat information for each booking
+	    for (BookingDTO booking : bookings) {
+//	        booking.setPassengers(bookingService.getPassengersByPnrNumber(booking.getPnrNumber()));
+//	        booking.setTrainNumber(bookingService.getTrainNumberByPnrNumber(booking.getPnrNumber()));
+//	        booking.setSeats(bookingService.getSeatsByPnrNumber(booking.getPnrNumber()));
+	    }
+	    return bookings;
 	}
 
 //	@PostMapping("/addnewbooking")

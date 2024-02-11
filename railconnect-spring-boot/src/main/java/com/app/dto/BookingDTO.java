@@ -28,5 +28,7 @@ public class BookingDTO {
 	private LocalDateTime bookingDateTime;
 	private LocalDate dateOfJourney;
 	private Double totalAmount;
-	private Integer seats;
+//	private Integer seats;
+    private List<SeatDTO> seats; // Add SeatDTO class and seats field
+
 }
