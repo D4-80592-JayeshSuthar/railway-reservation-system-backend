@@ -1,7 +1,9 @@
 package com.app.service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
@@ -22,6 +24,7 @@ import com.app.dto.TicketDTO;
 import com.app.entities.BookingEntity;
 import com.app.entities.PassengerEntity;
 import com.app.entities.TicketEntity;
+import com.app.exceptions.ResourceNotFoundException;
 
 @Service
 @Transactional
@@ -104,11 +107,32 @@ public class BookingServiceImpl implements BookingService {
 //	}
 
     public BookingDTO convertEntityToDto(BookingEntity bookingEntity) {
-        return modelMapper.map(bookingEntity, BookingDTO.class);
+    	BookingDTO booking = modelMapper.map(bookingEntity, BookingDTO.class);
+    	System.out.println(booking.getTickets().toString());
+    	booking.setUserId(bookingEntity.getUser().getId());
+    	booking.setTrainNumber(bookingEntity.getTrain().getTrainNumber());
+    	booking.setTickets(new HashSet<TicketDTO>());
+    	Set<TicketDTO> tickets = booking.getTickets();
+    	
+    	for (TicketEntity ticket : bookingEntity.getTickets()) {
+    		tickets.add(TicketServiceImpl.convertEntityToDto(ticket));
+		}
+        return booking;
     }
-
     public BookingEntity convertDtoToEntity(BookingDTO bookingDTO) {
-        return modelMapper.map(bookingDTO, BookingEntity.class);
+       
+    	BookingEntity newBooking = modelMapper.map(bookingDTO, BookingEntity.class);
+    	newBooking.setUser(userDao.findById(bookingDTO.getUserId())
+    			.orElseThrow(() -> new ResourceNotFoundException("User Not found")));
+    	newBooking.setTrain(trainDao.findById(bookingDTO.getTrainNumber())
+    			.orElseThrow(() -> new ResourceNotFoundException("Train Not found")));
+    	Set<TicketDTO> tickets = bookingDTO.getTickets();
+    	for (TicketDTO ticket : tickets) {
+			newBooking.getTickets()
+			.add(TicketServiceImpl.convertDtoToEntity(ticket));
+		}
+    	return newBooking;
+        
     }
 	
 	@SuppressWarnings("null")
@@ -145,31 +169,31 @@ public class BookingServiceImpl implements BookingService {
 	    }
 	    savedBookingDTO.setTickets(ticketEntities.stream()
 	            .map(TicketServiceImpl::convertEntityToDto)
-	            .collect(Collectors.toList()));
+	            .collect(Collectors.toSet()));
 
 	    // Convert and save passengers
-	    List<PassengerEntity> passengerEntities = new ArrayList<>();
-	    for (PassengerDTO passengerDTO : booking.getPassengers()) {
-	        PassengerEntity passengerEntity = new PassengerEntity();
-	        // Map passengerDTO to passengerEntity attributes
-	        passengerEntity.setPassengerName(passengerDTO.getPassengerName());
-	        passengerEntity.setGender(passengerDTO.getGender());
-	        passengerEntity.setPassengerAge(passengerDTO.getPassengerAge());
-	        
-	        // Save the passengerEntity
-	        passengerDao.save(passengerEntity);
-	        passengerEntities.add(passengerEntity);
-	    }
-	    savedBookingDTO.setPassengers(passengerEntities.stream()
-	            .map(passengerEntity -> {
-	                PassengerDTO passengerDTO = new PassengerDTO();
-	                // Map passengerEntity to passengerDTO attributes
-	                passengerDTO.setPassengerName(passengerEntity.getPassengerName());
-	                passengerDTO.setGender(passengerEntity.getGender());
-	                passengerDTO.setPassengerAge(passengerEntity.getPassengerAge());
-	                return passengerDTO;
-	            })
-	            .collect(Collectors.toList()));
+//	    List<PassengerEntity> passengerEntities = new ArrayList<>();
+//	    for (PassengerDTO passengerDTO : booking.getPassengers()) {
+//	        PassengerEntity passengerEntity = new PassengerEntity();
+//	        // Map passengerDTO to passengerEntity attributes
+//	        passengerEntity.setPassengerName(passengerDTO.getPassengerName());
+//	        passengerEntity.setGender(passengerDTO.getGender());
+//	        passengerEntity.setPassengerAge(passengerDTO.getPassengerAge());
+//	        
+//	        // Save the passengerEntity
+//	        passengerDao.save(passengerEntity);
+//	        passengerEntities.add(passengerEntity);
+//	    }
+//	    savedBookingDTO.setPassengers(passengerEntities.stream()
+//	            .map(passengerEntity -> {
+//	                PassengerDTO passengerDTO = new PassengerDTO();
+//	                // Map passengerEntity to passengerDTO attributes
+//	                passengerDTO.setPassengerName(passengerEntity.getPassengerName());
+//	                passengerDTO.setGender(passengerEntity.getGender());
+//	                passengerDTO.setPassengerAge(passengerEntity.getPassengerAge());
+//	                return passengerDTO;
+//	            })
+//	            .collect(Collectors.toList()));
 	    
 	    return savedBookingDTO;
 	}

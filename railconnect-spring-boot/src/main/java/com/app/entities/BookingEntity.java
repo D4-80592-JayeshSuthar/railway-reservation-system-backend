@@ -51,7 +51,7 @@ public class BookingEntity{
 //    private CoachEntity coach;
 	
 	@Enumerated(EnumType.STRING)
-	@Column(name = "coach")
+	@Column(name = "coach_type")
 	private Coaches coachType;
 
 	@ManyToOne(fetch = FetchType.LAZY)
