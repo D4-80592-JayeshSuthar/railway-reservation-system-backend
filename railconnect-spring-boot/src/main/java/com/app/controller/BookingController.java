@@ -54,9 +54,9 @@ public class BookingController {
 	    List<BookingDTO> bookings = bookingService.showAllBookings();
 	    // Populate passenger details, user ID, train number, and seat information for each booking
 	    for (BookingDTO booking : bookings) {
-//	        booking.setPassengers(bookingService.getPassengersByPnrNumber(booking.getPnrNumber()));
-//	        booking.setTrainNumber(bookingService.getTrainNumberByPnrNumber(booking.getPnrNumber()));
-//	        booking.setSeats(bookingService.getSeatsByPnrNumber(booking.getPnrNumber()));
+	        booking.setPassengers(bookingService.getPassengersByPnrNumber(booking.getPnrNumber()));
+	        booking.setTrainNumber(bookingService.getTrainNumberByPnrNumber(booking.getPnrNumber()));
+	        booking.setSeats(bookingService.getSeatsByPnrNumber(booking.getPnrNumber()));
 	    }
 	    return bookings;
 	}

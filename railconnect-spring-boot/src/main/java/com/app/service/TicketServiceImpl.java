@@ -36,7 +36,7 @@ public class TicketServiceImpl implements TicketService {
 	
 	public static TicketEntity convertDtoToEntity(TicketDTO ticketDTO) {
         TicketEntity ticketEntity = new TicketEntity();
-        ticketEntity.setId(ticketDTO.getTicketId());
+        ticketEntity.setTicketId(ticketDTO.getTicketId());
         
         // Assuming you have a method to fetch BookingEntity by PNR number
         // For example: bookingRepository.findByPnrNumber(ticketDTO.getPnrNumber());
@@ -65,7 +65,7 @@ public class TicketServiceImpl implements TicketService {
 	
 	public static TicketDTO convertEntityToDto(TicketEntity ticketEntity) {
         TicketDTO ticketDTO = new TicketDTO();
-        ticketDTO.setTicketId(ticketEntity.getId());
+        ticketDTO.setTicketId(ticketEntity.getTicketId());
         ticketDTO.setSeatNumber(ticketEntity.getSeatNumber());
         ticketDTO.setStatus(ticketEntity.getStatus());
         // If needed, map other attributes from TicketEntity to TicketDTO

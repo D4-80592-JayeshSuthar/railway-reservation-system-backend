@@ -18,7 +18,6 @@ import com.app.dao.UserEntityDao;
 //import com.app.dao.TrainDAO;
 import com.app.dto.BookingDTO;
 import com.app.dto.PassengerDTO;
-import com.app.dto.SeatDTO;
 import com.app.dto.TicketDTO;
 import com.app.entities.BookingEntity;
 import com.app.entities.PassengerEntity;
@@ -180,20 +179,24 @@ public class BookingServiceImpl implements BookingService {
 
 	
 
-//    @Override
-//    public List<PassengerDTO> getPassengersByPnrNumber(Long pnrNumber) {
-//        return bookingDao.getPassengersByPnrNumber(pnrNumber);
-//    }
+    @Override
+    public List<PassengerDTO> getPassengersByPnrNumber(Long pnrNumber) {
+        return bookingDao.getPassengersByPnrNumber(pnrNumber);
+    }
 
-//    @Override
-//    public Long getTrainNumberByPnrNumber(Long pnrNumber) {
-//        return bookingDao.getTrainNumberByPnrNumber(pnrNumber);
-//    }
+    public Long getTrainNumberByPnrNumber(Long pnrNumber) {
+        BookingEntity booking = bookingDao.findByPnrNumber(pnrNumber);
+        if (booking != null && booking.getTrain() != null) {
+            return booking.getTrain().getTrainNumber(); // Assuming train number is stored in the TrainEntity
+        } else {
+            return null; // Or handle the case when no train is found for the given pnrNumber
+        }
+    }
 
-//    @Override
-//    public List<SeatDTO> getSeatsByPnrNumber(Long pnrNumber) {
-//        return bookingDao.getSeatsByPnrNumber(pnrNumber);
-//    }
+    @Override
+    public List<TicketDTO> getSeatsByPnrNumber(Long pnrNumber) {
+        return bookingDao.getSeatsByPnrNumber(pnrNumber);
+    }
 	
 //	@Override
 //	public BookingDTO addNewBooking(BookingDTO booking) {

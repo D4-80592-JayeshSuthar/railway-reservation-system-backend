@@ -14,10 +14,18 @@ import lombok.Setter;
 @NoArgsConstructor
 public class TicketDTO {
 	private Long ticketId;
-//	private Long pnrNumber; // Reference to Booking PNR instead of the entire BookingEntity
+	private Long pnrNumber; // Reference to Booking PNR instead of the entire BookingEntity
 	private String seatNumber;
 	private TicketStatus status;
 //	private String passengerName;
 //	private Integer passengerAge;
 //	private String gender;
+	
+	 // Constructor matching the expected arguments for the projection query
+    public TicketDTO(Long ticketId, String seatNumber, TicketStatus status) {
+        this.ticketId = ticketId;
+        this.seatNumber = seatNumber;
+        this.status = status;
+    }
 }
+

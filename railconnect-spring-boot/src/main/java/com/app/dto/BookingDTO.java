@@ -1,11 +1,7 @@
 package com.app.dto;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-
-import com.app.entities.Coaches;
-//import com.app.entities.TicketEntity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -29,6 +25,6 @@ public class BookingDTO {
 	private LocalDate dateOfJourney;
 	private Double totalAmount;
 //	private Integer seats;
-    private List<SeatDTO> seats; // Add SeatDTO class and seats field
-
+//    private List<TicketDTO> seats; 
+    
 }

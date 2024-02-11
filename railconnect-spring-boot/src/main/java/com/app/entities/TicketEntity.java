@@ -1,11 +1,13 @@
 package com.app.entities;
 
-import javax.persistence.AttributeOverride;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -23,8 +25,14 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-@AttributeOverride(name = "id", column = @Column(name = "ticket_id", length = 10))
-public class TicketEntity extends BaseEntity {
+//@AttributeOverride(name = "id", column = @Column(name = "ticket_id", length = 10))
+public class TicketEntity {
+	
+	@Id
+	@Column(name = "ticket_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // \\\\
+	private Long ticketId;
+
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "pnr_number") // Assuming this is the foreign key column

@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.app.dto.BookingDTO;
 import com.app.dto.PassengerDTO;
-import com.app.dto.SeatDTO;
+import com.app.dto.TicketDTO;
 
 
 @Service
@@ -18,11 +18,11 @@ public interface BookingService {
 	
 	BookingDTO addNewBooking(BookingDTO booking);
 
-//    List<PassengerDTO> getPassengersByPnrNumber(Long pnrNumber);
+    List<PassengerDTO> getPassengersByPnrNumber(Long pnrNumber);
     
-//    Long getTrainNumberByPnrNumber(Long pnrNumber);
+    Long getTrainNumberByPnrNumber(Long pnrNumber);
     
-//    List<SeatDTO> getSeatsByPnrNumber(Long pnrNumber);
+    List<TicketDTO> getSeatsByPnrNumber(Long pnrNumber);
 	
 
 }

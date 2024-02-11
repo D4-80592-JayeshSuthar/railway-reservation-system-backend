@@ -62,6 +62,11 @@ public class BookingEntity{
 	@JoinColumn(name = "train_number_fk")
 	private TrainEntity train;
 	
+	
+	@OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL, orphanRemoval = true)
+	private Set<PassengerEntity> passengers;
+
+
 
 //	bcoz it can be computed using train_number
 //	@Transient // Marks this property as not persistent
