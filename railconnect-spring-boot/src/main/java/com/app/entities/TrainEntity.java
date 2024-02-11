@@ -1,29 +1,29 @@
 package com.app.entities;
 
-import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.HashSet;
+
 import java.util.Set;
 
+import javax.persistence.AttributeOverride;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 @Entity
 @Table(name = "trains")
@@ -31,58 +31,74 @@ import lombok.ToString;
 @AllArgsConstructor
 @Getter
 @Setter
-@ToString
+//@ToString
+//@AttributeOverride(name = "id", column = @Column(name = "train_number"))
 public class TrainEntity {
 
-    @Id
-    @Column(name = "train_number", unique = true)
-    private long trainNumber;
+	@Id
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "train_sequence_generator")
+	@SequenceGenerator(name = "train_sequence_generator", initialValue = 1100)
+	private long trainNumber;
 
-    @Column(name = "train_name", length = 20)
-    private String trainName;
+	@Column(name = "train_name", length = 20, nullable = false)
+	private String trainName;
 
-    @Column(name = "arrival_time", length = 20)
-    private LocalTime arrivalTime;
+	@Column(nullable = false)
+	private LocalTime arrivalTime;
 
-    @Column(name = "departure_time", length = 20)
-    private LocalTime departureTime;
+	@Column(nullable = false)
+	private LocalTime departureTime;
 
-    @Column(name = "running_date")
-    private LocalDate runningDate;
+//    @Column(name = "running_date")
+//    private LocalDate runningDate;
 
-    @Column(name = "base_fare")
-    private double baseFare;
+	@Column(name = "base_fare", nullable = false)
+	private double baseFare;
 
-    private boolean activeStatus;
+	private boolean activeStatus;
 
-    @Column(name = "cancel_status")
-    private boolean cancelStatus;
+	private boolean cancelStatus;
 
-    @OneToMany(mappedBy = "train", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<BookingEntity> bookings = new HashSet<>();
+	@OneToMany(mappedBy = "train", cascade = CascadeType.ALL, orphanRemoval = true)
+	private Set<BookingEntity> bookings;
 
     @ManyToOne
-    @JoinColumn(name = "route_id", foreignKey = @ForeignKey(name = "fk_train_route"))
+    @JoinColumn(name = "route_id", foreignKey = @ForeignKey(name = "route_id_fk"))
     private RouteEntity route;
 
-    @OneToOne(mappedBy = "train", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private CoachEntity coach;
+//	@ManyToOne
+//	@JoinColumn(name = "route_id", referencedColumnName = "route_id")
+//	private RouteEntity route;
 
-    @Enumerated(EnumType.STRING)
-    private Coaches coachType;
+//    @OneToOne(mappedBy = "train", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+//    private CoachEntity coach;
 
-    @Column(name = "runs_on")
-    private String runsOn;
+//    @Enumerated(EnumType.STRING)
+//    private Coaches coachType;
 
-    @Column(name = "schedule_link")
-    private String scheduleLink;
+	private String runsOn;
 
-    @Column(name = "departure_station")
-    private String departureStation;
+	@Max(value = 200)
+	@Min(value = 100)
+	private Integer acSeats;
 
-    @Column(name = "arrival_station")
-    private String arrivalStation;
+	@Max(value = 300)
+	@Min(value = 100)
+	private Integer sleeperSeats;
 
-    @Column(name = "duration")
-    private String duration;
+	@Max(value = 100)
+	@Min(value = 50)
+	private Integer generalSeats;
+
+//    @Column(name = "schedule_link")
+//    private String scheduleLink;
+
+//    @Column(name = "departure_station") 
+//    private String departureStation;
+
+//    @Column(name = "arrival_station")
+//    private String arrivalStation;
+
+//    @Column(name = "duration")
+//    private String duration;
 }

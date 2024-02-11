@@ -1,5 +1,8 @@
 package com.app.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,15 +22,25 @@ public class RouteService {
                                           .orElseThrow(() -> new ResourceNotFoundException("Route not found"));
         return convertToDTO(routeEntity);
     }
+    
+    public List<RouteDTO> getAllRoutes(){
+    	List<RouteEntity> routeEntities = routeDAO.findAll();
+    	List<RouteDTO> routeDTOs = new ArrayList<RouteDTO>();
+    	for (RouteEntity routeEntity : routeEntities) {
+			routeDTOs.add(convertToDTO(routeEntity));
+		}
+    	return routeDTOs;
+    }
 
     private RouteDTO convertToDTO(RouteEntity routeEntity) {
         RouteDTO routeDTO = new RouteDTO();
         routeDTO.setRouteId(routeEntity.getRouteId());
         routeDTO.setSource(routeEntity.getSource());
         routeDTO.setDestination(routeEntity.getDestination());
-        routeDTO.setIntermediate(routeEntity.getIntermediate());
+//        routeDTO.setIntermediate(routeEntity.getIntermediate());
         return routeDTO;
     }
 
+//    private List<RouteDto>
     // You can define other methods here for CRUD operations
 }

@@ -1,0 +1,28 @@
+New Booking --->
+{
+	userId : 
+	fromStation :
+	toStation : 
+	coachtype :
+	trainNumber :
+	bookingDateTime : 
+	dateOfJourney :
+	Seats :
+	tickets : [
+			status : 
+			passenger : {
+					passengerName :
+					age :
+					gender : 
+					} ,
+ 			status : 
+			passenger : {
+					passengerName :
+					age :
+					gender : 
+					} ,
+		]
+	totalAmount :
+}
+
+Add Train -->

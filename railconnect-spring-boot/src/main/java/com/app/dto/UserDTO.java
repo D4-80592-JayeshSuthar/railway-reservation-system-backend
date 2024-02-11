@@ -7,6 +7,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
 
+import com.app.entities.Gender;
 import com.app.entities.UserEntity;
 
 import lombok.Getter;
@@ -25,7 +26,7 @@ public class UserDTO {
     @Past
     private LocalDate birthDate;
 
-    private UserEntity.Gender gender;
+    private Gender gender;
 
     @NotBlank
     @Pattern(regexp = "^[\\d+-]+$")  // Pattern for phone numbers with optional dashes

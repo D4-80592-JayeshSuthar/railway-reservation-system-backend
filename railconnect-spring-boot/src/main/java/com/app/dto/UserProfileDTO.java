@@ -7,6 +7,7 @@ import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+import com.app.entities.Gender;
 import com.app.entities.UserEntity;
 
 import lombok.Getter;
@@ -37,7 +38,7 @@ public class UserProfileDTO {
 	    private String mobileNo;
 
 	    @NotBlank
-	    private UserEntity.Gender gender; // Use the Gender enum from UserEntity
+	    private Gender gender; // Use the Gender enum from UserEntity
 
 	    public UserProfileDTO() {
 	        
