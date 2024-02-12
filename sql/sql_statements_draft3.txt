@@ -1,0 +1,161 @@
+use rail;
+show tables;
+select * from secure_users;
+select * from trains;
+select * from coaches;
+select * from routes;
+select * from bookings;
+select * from tickets;
+select * from waiting_list;
+select * from users;
+select * from passengers;
+select * from canceled_trains;
+delete from routes where route_id=2;
+desc pnr;
+desc admin;
+desc users;
+desc trains;
+desc bookings;
+desc tickets;
+desc routes;
+desc passengers;
+desc refunds;
+desc waiting_list;
+desc train_sequence_generator;
+
+
+INSERT INTO routes (destination, source) 
+VALUES 
+( 'Mumbai', 'Chennai'),
+( 'Delhi', 'Mumbai'),
+('Kolkata', 'Delhi'),
+('Banglore', 'Pune');
+select * from routes;
+
+INSERT INTO trains (train_number, train_name, arrival_time, departure_time, base_fare, active_status, cancel_status, runs_on, route_id,
+ ac_seats, sleeper_seats, general_seats) 
+VALUES 
+(1001,'Duranto', '09:00:00', '20:00:00', 250.00, 1,  0, 'Mon,Wed,Fri', 1, 150, 150, 75),
+(1002,'RajDhani', '02:00:00', '22:00:00', 300.00, 1,  0, 'Mon,Thu', 1, 200, 150, 60),
+(1003,'GaribRath', '07:00:00', '18:00:00', 100.00, 1,  0, 'Tue,Thu,Sat', 1, 100, 200, 100);
+select * from trains;
+
+
+INSERT INTO users (birth_date, country, email, first_name, gender, image, is_active, last_name, mobile_number, password, state, username, zip)
+VALUES ('1990-01-01', 'India', 'john@example.com', 'John', 'MALE', NULL, 1, 'Doe', '9876543210', 'hashed_password', 'Maharashtra', 'john_doe', '123456'),
+       ('1992-03-15', 'USA', 'jane@example.com', 'Jane', 'FEMALE', NULL, 1, 'Smith', '9876543211', 'hashed_password', 'California', 'jane_smith', '654321'),
+       ('1985-07-20', 'Canada', 'alice@example.com', 'Alice', 'FEMALE', NULL, 1, 'Johnson', '9876543212', 'hashed_password', 'Ontario', 'alice_johnson', '987654');
+select * from users;
+
+insert into bookings(pnr_number,coach_type, date_of_journey,from_station,to_station,train_number_fk,user_id_fk,total_amount) 
+values 
+(123456,'AC','2024-11-11','Mumbai','Pune',1001,1,250.00),
+(123457,'AC','2024-09-12','Mumbai','Chennai',1002,2,350.00),
+(123458,'GENERAL','2024-06-01','Bangalore','Pune',1003,3,400.00),
+(123459,'SLEEPER','2024-04-21','Mumbai','Chennai',1003,1,500.00),
+(123460,'GENERAL','2024-11-17','Delhi','Mumbai',1002,2,600.00),
+(123461,'SLEEPER','2024-12-30','Kolakata','Delhi',1001,3,700.00);
+select * from bookings;
+
+desc tickets;
+
+INSERT INTO tickets (pnr_number, seat_number, status) 
+VALUES 
+(123456, 'AC1', 'CONFIRM'),
+(123456, 'AC2', 'CONFIRM'),
+(123456, 'AC3', 'CONFIRM'),
+(123459, 'SL1', 'CONFIRM'),
+(123459, 'SL2', 'CONFIRM');
+
+
+INSERT INTO passengers (gender, passenger_age, passenger_name, ticket_id_fk) VALUES 
+('FEMALE', 28, 'Jane Doe', 1),
+('MALE', 34, 'John Smith', 2),
+('OTHER', 22, 'Alex Johnson', 3),
+('MALE', 22, 'Aalia Johnson', 4),
+('FEMALE', 45, 'Maria Garcia', 5);
+
+	CREATE VIEW booking_ticket_passenger_details AS
+SELECT
+    b.pnr_number,
+    b.coach_type,
+    b.user_id_fk AS user_id,
+    b.train_number_fk AS train_number,
+    b.date_of_journey,
+    b.booking_date_time,
+    b.from_station,
+    b.to_station,
+    b.total_amount,
+    t.ticket_id AS ticket_id,
+    t.seat_number,
+    t.status AS ticket_status,
+    p.passenger_id AS passenger_id,
+    p.passenger_name,
+    p.gender,
+    p.passenger_age
+FROM
+    bookings b
+INNER JOIN tickets t ON b.pnr_number = t.pnr_number
+LEFT JOIN passengers p ON t.ticket_id = p.ticket_id_fk;
+		
+		desc booking_ticket_passenger_details;
+		select * from booking_ticket_passenger_details;
+		
+
+	CREATE VIEW train_journey_coach_summary AS
+	SELECT
+		tbv.train_number ,
+		tbv.date_of_journey,
+		SUM(CASE WHEN tbv.coach_type = 'AC' THEN 1 ELSE 0 END) AS ac_count,
+		SUM(CASE WHEN tbv.coach_type = 'Sleeper' THEN 1 ELSE 0 END) AS sleeper_count,
+		SUM(CASE WHEN tbv.coach_type = 'General' THEN 1 ELSE 0 END) AS general_count
+	FROM
+		booking_ticket_passenger_details tbv
+	GROUP BY
+		tbv.train_number,
+		tbv.date_of_journey;
+		
+		desc train_journey_coach_summary;
+		select * from train_journey_coach_summary;
+        
+	show tables;
+    
+
+
+
+DELIMITER //
+
+CREATE TRIGGER ticket_insertion_trigger 
+AFTER INSERT ON tickets 
+FOR EACH ROW 
+BEGIN 
+    IF NEW.status = 'WAITING' THEN 
+        INSERT INTO waiting_list (ticket_id_fk) VALUES (NEW.ticket_id); 
+    END IF; 
+END;//
+
+DELIMITER ;
+
+drop trigger ticket_insertion_trigger;
+    
+
+
+
+
+
+
+ -- ---------------------------------------------------------------
+
+DELIMITER $$
+
+CREATE TRIGGER cleanup_canceled_trains
+BEFORE INSERT ON canceled_trains
+FOR EACH ROW
+BEGIN
+    DELETE FROM canceled_trains WHERE cancel_date < CURDATE();
+END;
+$$
+
+DELIMITER ;
+
+drop trigger cleanup_canceled_trains;
