@@ -30,14 +30,14 @@ public class UserDTO {
 
     @NotBlank
     @Pattern(regexp = "^[\\d+-]+$")  // Pattern for phone numbers with optional dashes
-    private String mobileNo;
+    private String mobileNumber;
 
     @NotBlank
     @Email
     private String email;
 
     @NotBlank
-    private String userName;
+    private String username;
 
     @NotBlank
     private String country;
