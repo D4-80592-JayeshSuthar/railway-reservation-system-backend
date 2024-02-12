@@ -113,4 +113,17 @@ INSERT INTO passengers (gender, passenger_age, passenger_name, ticket_id_fk) VAL
 ('OTHER', 22, 'Alex Johnson', 3),
 ('MALE', 22, 'Aalia Johnson', 4),
 ('FEMALE', 45, 'Maria Garcia', 5);
+-----------------------------------------------------------
 
+DELIMITER //
+
+CREATE TRIGGER ticket_insertion_trigger 
+AFTER INSERT ON tickets 
+FOR EACH ROW 
+BEGIN 
+    IF NEW.status = 'WAITING' THEN 
+        INSERT INTO waiting_list (ticket_id_fk) VALUES (NEW.ticket_id); 
+    END IF; 
+END;//
+
+DELIMITER ;
