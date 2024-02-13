@@ -26,6 +26,7 @@ public class TicketServiceImpl implements TicketService {
 
 	@Override
 	public TicketEntity bookTicket(TicketEntity ticket) {
+		ticket.getStatus();
 		return ticketDao.save(ticket);
 	}
 
