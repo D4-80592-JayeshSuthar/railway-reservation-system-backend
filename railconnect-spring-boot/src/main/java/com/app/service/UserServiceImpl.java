@@ -14,14 +14,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.app.custom_exceptions.ResourceNotFoundException;
 import com.app.dao.UserEntityDao;
-import com.app.dto.Signup;
 import com.app.dto.UserDTO;
 import com.app.dto.UserDetailDTO;
+import com.app.dto.UserProfileDTO;
 import com.app.entities.UserEntity;
 
 @Service
 @Transactional
-
 public class UserServiceImpl implements UserService {
 	    @Autowired
 	    private UserEntityDao userDao;
@@ -77,14 +76,14 @@ public class UserServiceImpl implements UserService {
 	    
 	
 
-	 // Implement the method to set a user's status to active
-	 @Override
-	 public void setActive(Long userId) {
-	     UserEntity userEntity = findById(userId)
-	             .orElseThrow(() -> new ResourceNotFoundException("User not found with ID: " + userId));
-	     userEntity.setActive(true); // Set isActive to true
-	     userDao.save(userEntity);
-	 }
+	    // Implement the method to set a user's status to active
+		@Override
+		public void setActive(Long userId) {
+		    UserEntity userEntity = findById(userId)
+		            .orElseThrow(() -> new ResourceNotFoundException("User not found with ID: " + userId));
+		    userEntity.setActive(true); // Set isActive to true
+		    userDao.save(userEntity);
+		}
 
 
 		@Override
@@ -111,8 +110,18 @@ public class UserServiceImpl implements UserService {
 	                .collect(Collectors.toList());
 	    }
 
-		
-		
-	    
+		@Override
+		public UserProfileDTO getUserProfileDetails(Long userId) {
+	        Optional<UserEntity> userEntity = userDao.findById(userId);
+	        
+	        if (userEntity.isPresent()) {
+	            UserEntity userEntity1 = userEntity.get();
+	            System.out.println(userEntity1.toString());
+	            return modelMapper.map(userEntity1, UserProfileDTO.class);
+	        } else {
+	            // Handle case when user with given userId is not found
+	            throw new ResourceNotFoundException("User with id " + userId + " not found");
+	        }  
+		}	    
 }
 
