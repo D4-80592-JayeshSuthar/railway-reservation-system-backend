@@ -75,6 +75,14 @@ public class TrainService {
 		trainEntity.setActiveStatus(false);
 		trainDAO.save(trainEntity);
 	}
+	
+	public void activateTrain(Long trainNumber) {
+        TrainEntity trainEntity = trainDAO.findById(trainNumber)
+                .orElseThrow(() -> new ResourceNotFoundException("Train not found"));
+        trainEntity.setCancelStatus(false);
+        trainEntity.setActiveStatus(true);
+        trainDAO.save(trainEntity);
+    }
 
 	// Method to toggle the status of a train when it starts running
 	public void toggleTrainStatusWhenRunning() {

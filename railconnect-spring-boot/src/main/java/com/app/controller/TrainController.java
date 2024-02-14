@@ -115,10 +115,17 @@ public class TrainController {
  
     
     // Admin can remove trains (make them inactive)
-    @DeleteMapping("/remove/{trainNumber}")
+    @PutMapping("/remove/{trainNumber}")
     //@PreAuthorize("hasRole('ADMIN')")
+    @CrossOrigin(origins = "*")
     public void removeTrain(@PathVariable long trainNumber) {
         trainService.removeTrain(trainNumber);
+    }
+    
+    @PutMapping("/activate/{trainNumber}")
+    @CrossOrigin(origins = "*")
+    public void activateTrain(@PathVariable long trainNumber) {
+        trainService.activateTrain(trainNumber);
     }
 
 //    // Controller method to cancel a train and reschedule it to a particular date
