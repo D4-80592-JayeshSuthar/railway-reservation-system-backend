@@ -8,7 +8,6 @@ import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
 
 import com.app.entities.Gender;
-import com.app.entities.UserEntity;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -17,7 +16,9 @@ import lombok.Setter;
 @Setter
 public class UserDTO {
 
-    @NotBlank
+	private byte[] image;
+	
+	@NotBlank
     private String firstName;
 
     @NotBlank
@@ -30,14 +31,14 @@ public class UserDTO {
 
     @NotBlank
     @Pattern(regexp = "^[\\d+-]+$")  // Pattern for phone numbers with optional dashes
-    private String mobileNo;
+    private String mobileNumber;
 
     @NotBlank
     @Email
     private String email;
 
     @NotBlank
-    private String userName;
+    private String username;
 
     @NotBlank
     private String country;

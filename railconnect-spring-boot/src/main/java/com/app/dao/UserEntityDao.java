@@ -7,6 +7,5 @@ import com.app.entities.UserEntity;
 
 public interface UserEntityDao extends JpaRepository<UserEntity, Long> {
     Optional<UserEntity> findByEmail(String email);
-    
     Optional<UserEntity> findByUsername(String username); 
 }
