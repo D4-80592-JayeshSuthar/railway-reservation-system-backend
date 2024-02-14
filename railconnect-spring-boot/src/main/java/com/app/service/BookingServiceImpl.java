@@ -1,5 +1,6 @@
 package com.app.service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -11,19 +12,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.app.custom_exceptions.CancellationNotAllowedException;
+import com.app.custom_exceptions.InvalidBookingException;
+import com.app.custom_exceptions.TicketNotFoundException;
 import com.app.dao.BookingDAO;
 import com.app.dao.PassengerDAO;
+import com.app.dao.RefundDAO;
 //import com.app.dao.RouteDAO;
 import com.app.dao.TicketDAO;
 import com.app.dao.TrainDAO;
 import com.app.dao.UserEntityDao;
 //import com.app.dao.TrainDAO;
 import com.app.dto.BookingDTO;
-import com.app.dto.PassengerDTO;
 import com.app.dto.TicketDTO;
 import com.app.entities.BookingEntity;
-import com.app.entities.PassengerEntity;
+import com.app.entities.RefundEntity;
 import com.app.entities.TicketEntity;
+import com.app.entities.TicketStatus;
 import com.app.exceptions.ResourceNotFoundException;
 
 @Service
@@ -41,6 +46,11 @@ public class BookingServiceImpl implements BookingService {
 
 	@Autowired
 	private PassengerDAO passengerDao;
+	
+	@Autowired
+	private RefundDAO refundDao;
+	
+	
 
 //	@Autowired
 //	private RouteDAO routeDao;
@@ -198,6 +208,7 @@ public class BookingServiceImpl implements BookingService {
 	    return savedBookingDTO;
 	}
 
+	 
 	
 //	@Override
 //	public BookingDTO addNewBooking(BookingDTO booking) {
@@ -268,5 +279,6 @@ public class BookingServiceImpl implements BookingService {
 //		// BookingEntity newBooking = bookingDao.save(bookingEntity);
 //		return convertEntityToDto(newBooking);
 //	}
+	
 
 }

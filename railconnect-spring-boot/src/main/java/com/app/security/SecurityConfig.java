@@ -44,13 +44,8 @@ public class SecurityConfig {
 		.antMatchers("/bookings/mybookings","/bookings/addnewbooking","/bookings/allbookings","/users/*/status/active","/users/*/status/inactive","/users/images/*","/trains/*/schedule",
 				"/trains/*/cancel","/trains/add","/trains/remove/*","/trains/search","/trains/view","/users/signup",
 				"/users/signin","/users/by-userid/*",
-<<<<<<< Updated upstream
-				"/users/by-email/*","/users/by-username/*"
-				,"/v*/api-doc*/**","/users/*","/swagger-ui/**").permitAll()
-=======
 				"/users/by-email/*","/users/by-username/*","/users/**"
 				,"/v*/api-doc*/**","/users/*","/swagger-ui/**","/refund/**").permitAll()
->>>>>>> Stashed changes
  
 		// only required for JS clnts (react / angular) : for the pre flight requests
 		.antMatchers(HttpMethod.OPTIONS).permitAll()

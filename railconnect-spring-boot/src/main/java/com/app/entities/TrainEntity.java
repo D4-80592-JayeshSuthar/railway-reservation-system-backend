@@ -53,7 +53,7 @@ public class TrainEntity {
 //    private LocalDate runningDate;
 
 	@Column(name = "base_fare", nullable = false)
-	private double baseFare;
+	private double baseFare;	
 
 	private boolean activeStatus;
 
