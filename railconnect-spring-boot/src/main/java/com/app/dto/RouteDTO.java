@@ -21,8 +21,8 @@ public class RouteDTO {
     @Size(max = 20, message = "Destination length must be less than or equal to 20 characters")
     private String destination;
 
-    @Size(max = 20, message = "Intermediate length must be less than or equal to 20 characters")
-    private String intermediate;
+//    @Size(max = 20, message = "Intermediate length must be less than or equal to 20 characters")
+//    private String intermediate;
     
     
     public RouteEntity toEntity() {
