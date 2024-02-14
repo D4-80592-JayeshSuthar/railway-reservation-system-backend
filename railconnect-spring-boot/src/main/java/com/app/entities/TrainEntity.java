@@ -78,16 +78,13 @@ public class TrainEntity {
 
 	private String runsOn;
 
-	@Max(value = 200)
-	@Min(value = 100)
+
 	private Integer acSeats;
 
-	@Max(value = 300)
-	@Min(value = 100)
+
 	private Integer sleeperSeats;
 
-	@Max(value = 100)
-	@Min(value = 50)
+
 	private Integer generalSeats;
 
 //    @Column(name = "schedule_link")
