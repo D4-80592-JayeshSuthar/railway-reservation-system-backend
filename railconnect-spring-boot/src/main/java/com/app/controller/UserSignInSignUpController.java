@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.app.dto.SigninRequest;
 import com.app.dto.SigninResponse;
-import com.app.dto.Signup;
 import com.app.entities.UserEntity;
 import com.app.security.JwtUtils;
 import com.app.service.UserService;
