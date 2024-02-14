@@ -21,11 +21,11 @@ import com.app.service.RefundService;
 
 @RestController
 @RequestMapping("/refund")
-@CrossOrigin
 @Validated
+@CrossOrigin("*")
 public class RefundController {
-		 @Autowired 
-		 private RefundService refundService;
+	@Autowired 
+	private RefundService refundService;
 
 	@PostMapping(value = "/{bookingId}/tickets/{ticketId}/cancel/{amount}",produces = MediaType.APPLICATION_JSON_VALUE)
     public void cancelTicket(
@@ -35,12 +35,12 @@ public class RefundController {
         RefundResposeDTO refund = refundService.cancelTicket(bookingId, ticketId,amount);
 	}
 	
-	 @GetMapping
+	 @GetMapping("/getAllRefundList")
 	    public List<RefundDTO> getAllRefunds() {
 	        return refundService.getAllRefunds();
 	}
 	 
-	 @PostMapping("/update-status")
+	 @PostMapping("/updateStatus")
 	    public ResponseEntity<String> updateRefundStatus(@RequestBody List<Long> ticketIds) {
 	        try {
 	            refundService.updateRefundStatus(ticketIds);
@@ -48,5 +48,5 @@ public class RefundController {
 	        } catch (Exception e) {
 	            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating refund status: " + e.getMessage());
 	        }
-	    }
+	   }
 }
