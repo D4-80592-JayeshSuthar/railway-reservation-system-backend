@@ -7,6 +7,7 @@ import javax.validation.Valid;
 
 import com.app.dto.UserDTO;
 import com.app.dto.UserDetailDTO;
+import com.app.dto.UserProfileDTO;
 import com.app.entities.UserEntity;
 
 public interface UserService {
@@ -18,7 +19,6 @@ public interface UserService {
 	Optional<UserEntity> findById(Long userId);
 
 	void setInactive(Long userId);
-	
 
 	void setActive(Long userId);
 
@@ -30,4 +30,6 @@ public interface UserService {
 	UserDetailDTO getUserDetailsByUsername(String username);
 
 	List<UserDetailDTO> getAllUsers();
+
+	UserProfileDTO getUserProfileDetails(Long userId);
 }

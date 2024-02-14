@@ -27,7 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.app.dto.UserDTO;
 import com.app.dto.UserDetailDTO;
-import com.app.entities.UserEntity;
+import com.app.dto.UserProfileDTO;
 import com.app.service.ImageHandlingService;
 import com.app.service.UserService;
 
@@ -72,6 +72,12 @@ public class UserController {
     public ResponseEntity<UserDTO> updateProfile(@PathVariable Long userId, @Valid @RequestBody UserDTO userDTO) {
         UserDTO updatedUserDTO = userService.update(userId, userDTO);
         return ResponseEntity.ok(updatedUserDTO);
+    }
+	
+	@GetMapping("/userProfile/{userId}")
+    public ResponseEntity<UserProfileDTO> getUserProfile(@PathVariable Long userId) {
+        UserProfileDTO userDetailDTO = userService.getUserProfileDetails(userId);
+        return ResponseEntity.ok(userDetailDTO);
     }
 	
 	// to delete the account (setting the status inactive)

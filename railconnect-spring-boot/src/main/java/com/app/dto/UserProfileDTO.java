@@ -5,10 +5,8 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
 
 import com.app.entities.Gender;
-import com.app.entities.UserEntity;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -16,7 +14,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UserProfileDTO {
-
+		private byte[] image;
+	
 	    @NotBlank
 	    private String firstName;
 
@@ -39,8 +38,8 @@ public class UserProfileDTO {
 
 	    @NotBlank
 	    private Gender gender; // Use the Gender enum from UserEntity
-
+	    
 	    public UserProfileDTO() {
-	        
+	    	
 	    }
 }
