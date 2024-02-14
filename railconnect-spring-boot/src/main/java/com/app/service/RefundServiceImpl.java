@@ -1,6 +1,8 @@
 package com.app.service;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
@@ -14,6 +16,7 @@ import com.app.custom_exceptions.TicketNotFoundException;
 import com.app.dao.BookingDAO;
 import com.app.dao.RefundDAO;
 import com.app.dao.TicketDAO;
+import com.app.dto.RefundDTO;
 import com.app.dto.RefundResposeDTO;
 import com.app.entities.BookingEntity;
 import com.app.entities.RefundEntity;
@@ -95,6 +98,30 @@ public class RefundServiceImpl implements RefundService {
          refundDao.save(refund);
          RefundResposeDTO rrDTO = new RefundResposeDTO(HttpStatus.OK, "Ticket canceled successfully");
         return rrDTO;
+    }
+    
+    public List<RefundDTO> getAllRefunds() {
+        List<RefundEntity> refunds = refundDao.findAll();
+        return refunds.stream().map(this::mapToDTO).collect(Collectors.toList());
+    }
+
+    private RefundDTO mapToDTO(RefundEntity refundEntity) {
+        return new RefundDTO(
+                refundEntity.getTicket().getBooking().getTrain().getTrainName(),
+                refundEntity.getTicket().getBooking().getTrain().getTrainNumber(),
+                refundEntity.getTicket().getId(),
+                refundEntity.getReason(),
+                refundEntity.getAmount(),
+                refundEntity.getRefundStatus()
+        );
+    }
+
+    public void updateRefundStatus(List<Long> ticketIds) {
+        List<RefundEntity> refundEntities = refundDao.findByTicketIdIn(ticketIds);
+        for (RefundEntity refundEntity : refundEntities) {
+            refundEntity.setRefundStatus(true);
+        }
+        refundDao.saveAll(refundEntities);
     }
 
 }
