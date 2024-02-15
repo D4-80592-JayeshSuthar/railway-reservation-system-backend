@@ -1,0 +1,148 @@
+use rail;
+show tables;
+select * from secure_users;
+select * from trains;
+select * from coaches;
+select * from routes;
+select * from bookings;
+select * from tickets;
+select * from users;
+delete from routes where route_id=2;
+desc routes;
+desc trains;
+desc coaches; 
+desc bookings;
+desc tickets;
+desc trains;
+desc users;
+
+drop database rail;
+
+
+-- Insert into routes table
+INSERT INTO routes (route_id, destination, intermediate, source) 
+VALUES 
+(1, 'Mumbai', 'Delhi', 'Chennai'),
+(2, 'Delhi', 'Mumbai', 'Kolkata'),
+(3, 'Kolkata', 'Chennai', 'Delhi');
+
+-- Insert into trains table
+INSERT INTO trains (train_number, active_status, arrival_station, arrival_time, base_fare, cancel_status, coach_type, departure_station, departure_time, duration, running_date, runs_on, schedule_link, train_name, route_id) 
+VALUES 
+(11001, 1, 'Delhi', '09:00:00', 200.00, 0, 'SLEEPER', 'Mumbai', '20:00:00', '13h 0m', '2024-02-06', 'M T W T', 'http://', 'Express', 1),
+(11002, 1, 'Mumbai', '10:00:00', 250.00, 0, 'THIRDAC', 'Delhi', '21:00:00', '14h 0m', '2024-02-07', 'M W F', 'http://', 'Superfast', 2),
+(11003, 1, 'Kolkata', '11:00:00', 300.00, 0, 'CHAIRCAR', 'Chennai', '22:00:00', '15h 0m', '2024-02-08', 'S S', 'http://', 'Rajdhani', 3);
+
+
+-- Insert into coaches table
+INSERT INTO coaches (train_number, chair_car, first_class, second_class, sleeper, third_ac) 
+VALUES 
+(11001, 50, 30, 20, 100, 10),
+(11002, 40, 25, 15, 80, 8),
+(11003, 45, 28, 18, 90, 9);
+
+INSERT INTO users (birth_date, country, email, first_name, gender, image, is_active, last_name, mobile_number, password, state, username, zip)
+VALUES ('1990-01-01', 'India', 'john@example.com', 'John', 'Male', NULL, 1, 'Doe', '9876543210', 'hashed_password', 'Maharashtra', 'john_doe', '123456'),
+       ('1992-03-15', 'USA', 'jane@example.com', 'Jane', 'Female', NULL, 1, 'Smith', '9876543211', 'hashed_password', 'California', 'jane_smith', '654321'),
+       ('1985-07-20', 'Canada', 'alice@example.com', 'Alice', 'Female', NULL, 1, 'Johnson', '9876543212', 'hashed_password', 'Ontario', 'alice_johnson', '987654');
+
+
+-- Insert into bookings table
+INSERT INTO bookings (pnr_number, coach, train_number, user_id, date_of_journey, from_station, to_station)  
+VALUES  
+(1234567890, 'SLEEPER', 11001, 1, '2024-02-06', 'Chennai', 'Delhi'), -- train_number 11004 from trains table
+(2345678901, 'THIRDAC', 11002, 2, '2024-02-07', 'Mumbai', 'Delhi'), -- train_number 11005 from trains table
+(3456789012, 'CHAIRCAR', 11003, 3, '2024-02-08', 'Kolkata', 'Chennai'); -- train_number 11006 from trains table
+
+
+
+INSERT INTO tickets (ticket_id, aadhar_number, passenger_name, seat_number, status, pnr_number)  
+VALUES  
+(1, 123456789012, 'John Doe', 'A1', 'CONFIRM', 1234567890), -- pnr_number 1234567890 from bookings table
+(2, 234567890123, 'Jane Smith', 'B2', 'CONFIRM', 2345678901), -- pnr_number 2345678901 from bookings table
+(3, 345678901234, 'Alice Johnson', 'C3', 'CONFIRM', 3456789012); -- pnr_number 3456789012 from bookings table
+
+
+----------------------------------------------------------------------------------------------------------------------------------
+
+
+show databases;
+use rail;
+show tables;
+drop database rail;
+drop table secure_users;
+desc pnr;
+desc admin;
+desc users;
+desc trains;
+desc bookings;
+desc tickets;
+desc routes;
+desc passengers;
+desc refunds;
+desc waiting_list;
+desc train_sequence_generator;
+
+INSERT INTO routes (destination, source) 
+VALUES 
+( 'Mumbai', 'Chennai'),
+( 'Delhi', 'Mumbai'),
+('Kolkata', 'Delhi'),
+('Banglore', 'Pune');
+select * from routes;
+
+INSERT INTO trains (train_number, train_name, arrival_time, departure_time, base_fare, active_status, cancel_status, runs_on, route_id,
+ ac_seats, sleeper_seats, general_seats) 
+VALUES 
+(1001,'Duranto', '09:00:00', '20:00:00', 250.00, 1,  0, 'Mon,Wed,Fri', 1, 150, 150, 75),
+(1002,'RajDhani', '02:00:00', '22:00:00', 300.00, 1,  0, 'Mon,Thu', 1, 200, 150, 60),
+(1003,'GaribRath', '07:00:00', '18:00:00', 100.00, 1,  0, 'Tue,Thu,Sat', 1, 100, 200, 100);
+select * from trains;
+
+insert into bookings(pnr_number,coach, date_of_journey,from_station,to_station,train_number,user_id) 
+values (123456,'FirstClass','2024-11-11','mumbai','pune',789456,1);
+
+CREATE VIEW tickets_bookings_view AS
+SELECT
+    t.ticket_id,
+    t.seat_number,
+    t.status AS ticket_status,
+    t.passenger_id_fk AS passenger_id,
+    b.pnr_number,
+    b.coach,
+    b.user_id_fk AS booking_user_id,
+    b.train_number_fk AS booking_train_number,
+    b.date_of_journey,
+    b.booking_date_time,
+    b.from_station,
+    b.to_station,
+    b.total_amount
+FROM
+    tickets t
+JOIN
+    bookings b ON t.pnr_number = b.pnr_number;
+    
+    desc tickets_bookings_view;
+    select * from tickets_bookings_view;
+    
+
+CREATE VIEW train_journey_coach_summary AS
+SELECT
+    tbv.booking_train_number AS train_number,
+    tbv.date_of_journey,
+    SUM(CASE WHEN tbv.coach = 'AC' THEN 1 ELSE 0 END) AS ac_count,
+    SUM(CASE WHEN tbv.coach = 'Sleeper' THEN 1 ELSE 0 END) AS sleeper_count,
+    SUM(CASE WHEN tbv.coach = 'General' THEN 1 ELSE 0 END) AS general_count
+FROM
+    tickets_bookings_view tbv
+GROUP BY
+    tbv.booking_train_number,
+    tbv.date_of_journey;
+    
+    desc train_journey_coach_summary;
+    select * from train_journey_coach_summary;
+
+show tables;
+	
+
+
