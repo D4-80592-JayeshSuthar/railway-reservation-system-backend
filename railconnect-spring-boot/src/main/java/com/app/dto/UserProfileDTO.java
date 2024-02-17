@@ -25,8 +25,6 @@ public class UserProfileDTO {
 	    @Past
 	    private LocalDate birthDate;
 
-	    @NotBlank
-	    private String address;
 
 	    @NotBlank
 	    @Email
@@ -34,7 +32,7 @@ public class UserProfileDTO {
 
 	    @NotBlank
 	    @Pattern(regexp = "^\\d{10}$", message = "Invalid mobile number. Must be 10 digits.")
-	    private String mobileNo;
+	    private String mobileNumber;
 
 	    @NotBlank
 	    private Gender gender; // Use the Gender enum from UserEntity
