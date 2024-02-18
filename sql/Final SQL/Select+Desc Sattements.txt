@@ -1,0 +1,48 @@
+-- Table Descriptions -->
+
+Show tables;
+desc admin;
+desc bookings;
+desc canceled_trains;
+desc passengers;
+desc pnr_sequence_generator;
+desc refunds;
+desc routes;
+desc tickets;
+desc train_sequence_generator;
+desc trains;
+desc user_feedback;
+desc users;
+desc waiting_list;
+
+
+-- View Descriptions -->
+
+SHOW FULL TABLES IN rail1 WHERE TABLE_TYPE LIKE 'VIEW';
+desc booking_ticket_passenger_details;
+desc train_journey_coach_summary;
+desc view_ticket_summary;
+
+
+-- Select statements -->
+
+select * from admin;
+select * from bookings;
+select * from canceled_trains;
+select * from passengers;
+select * from pnr_sequence_generator;
+select * from refunds;
+select * from routes;
+select * from tickets;
+select * from train_sequence_generator;
+select * from trains;
+select * from user_feedback;
+select * from users;
+select * from waiting_list;
+
+select * booking_ticket_passenger_details;
+select * train_journey_coach_summary;
+select * view_ticket_summary;
+
+
+
