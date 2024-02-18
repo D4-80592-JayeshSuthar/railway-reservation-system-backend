@@ -27,12 +27,11 @@ public class RefundController {
 	@Autowired 
 	private RefundService refundService;
 
-	@PostMapping(value = "/{bookingId}/tickets/{ticketId}/cancel/{amount}",produces = MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping(value = "/{bookingId}/tickets/{ticketId}/cancel",produces = MediaType.APPLICATION_JSON_VALUE)
     public void cancelTicket(
         @PathVariable Long bookingId,
-        @PathVariable Long ticketId,
-        @PathVariable Double amount) {
-        RefundResposeDTO refund = refundService.cancelTicket(bookingId, ticketId,amount);
+        @PathVariable Long ticketId) {
+        RefundResposeDTO refund = refundService.cancelTicket(bookingId, ticketId);
 	}
 	
 	 @GetMapping("/getAllRefundList")
