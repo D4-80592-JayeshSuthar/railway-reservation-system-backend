@@ -22,10 +22,10 @@ import lombok.ToString;
 public class BookingDTO {	
 	private Long pnrNumber;
 //    private List<PassengerDTO> passengers; // Add this field for passengers
-	private Set<TicketDTO> tickets;
-	private String coachType;
+	private Coaches coachType;
 	private Long userId; 
 	private Long trainNumber;
+	private Set<TicketDTO> tickets;
 	private String fromStation;
 	private String toStation;
 	private LocalDateTime bookingDateTime;

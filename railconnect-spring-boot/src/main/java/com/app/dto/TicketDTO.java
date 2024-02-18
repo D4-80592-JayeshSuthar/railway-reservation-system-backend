@@ -1,6 +1,7 @@
 package com.app.dto;
 
 import com.app.entities.Gender;
+import com.app.entities.PassengerEntity;
 import com.app.entities.TicketStatus;
 
 import lombok.AllArgsConstructor;
@@ -22,4 +23,5 @@ public class TicketDTO {
 //	private String passengerName;
 //	private Integer passengerAge;
 //	private String gender;
+	private PassengerDTO passenger;
 }

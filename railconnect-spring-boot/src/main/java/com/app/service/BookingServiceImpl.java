@@ -4,9 +4,11 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.hibernate.query.criteria.internal.ValueHandlerFactory.FloatValueHandler;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,8 +26,12 @@ import com.app.dao.TrainDAO;
 import com.app.dao.UserEntityDao;
 //import com.app.dao.TrainDAO;
 import com.app.dto.BookingDTO;
+import com.app.dto.PassengerDTO;
+import com.app.dto.SeatAvailabilityDTO;
 import com.app.dto.TicketDTO;
 import com.app.entities.BookingEntity;
+import com.app.entities.Coaches;
+import com.app.entities.PassengerEntity;
 import com.app.entities.RefundEntity;
 import com.app.entities.TicketEntity;
 import com.app.entities.TicketStatus;
@@ -158,6 +164,115 @@ public class BookingServiceImpl implements BookingService {
 	}// Getting all ticket information is not implemented in this method
 
 	
+	// final add booking which is working
+	
+	@Override
+	public BookingDTO addNewBooking(BookingDTO booking) {
+	    // Convert DTO to entity
+	    BookingEntity newBooking = convertDtoToEntity(booking);
+
+	    // Save the new booking entity
+	    bookingDao.save(newBooking);
+
+	    // Convert the saved entity back to DTO
+	    BookingDTO savedBookingDTO = convertEntityToDto(newBooking);
+
+	    // Convert and save tickets
+	    List<TicketEntity> ticketEntities = new ArrayList<>();
+
+	 // Fetch the coach counts for the train on the date of journey
+	    Optional<List<Integer[]>> coachCountsOptional = trainDao.findCoachCountByTrainNumberAndDateOfJourney(
+	            newBooking.getTrain().getTrainNumber(), newBooking.getDateOfJourney());
+	    System.out.println("**************" + coachCountsOptional.toString());
+
+	if (coachCountsOptional.isPresent()) {
+	    List<Integer[]> coachCounts = coachCountsOptional.get();
+	    int acCount = coachCounts.get(0)[0]; // Assuming ac_count is the first column
+	    int sleeperCount = coachCounts.get(0)[1]; // Assuming sleeper_count is the second column
+	    int generalCount = coachCounts.get(0)[2]; // Assuming general_count is the third column
+	    // Use the counts as needed
+
+	   
+	    
+	        // Iterate through each ticket in the booking
+	        for (TicketDTO ticketDTO : booking.getTickets()) {
+	            TicketEntity ticketEntity = TicketServiceImpl.convertDtoToEntity(ticketDTO);
+	            ticketEntity.setBooking(newBooking);
+
+	            // Allocate seat number based on coach type availability
+	            switch (newBooking.getCoachType()) {
+	                case AC:
+	                    if (acCount < newBooking.getTrain().getAcSeats()) {
+	                        ticketEntity.setSeatNumber("AC" + (++acCount));
+	                        ticketEntity.setStatus(TicketStatus.CONFIRM);
+	                    } else {
+	                        ticketEntity.setStatus(TicketStatus.WAITING);
+	                    }
+	                    break;
+	                case SLEEPER:
+	                    if (sleeperCount < newBooking.getTrain().getSleeperSeats()) {
+	                        ticketEntity.setSeatNumber("SL" + (++sleeperCount));
+	                        ticketEntity.setStatus(TicketStatus.CONFIRM);
+	                    } else {
+	                        ticketEntity.setStatus(TicketStatus.WAITING);
+	                    }
+	                    break;
+	                case GENERAL:
+	                    if (generalCount < newBooking.getTrain().getGeneralSeats()) {
+	                        ticketEntity.setSeatNumber("GN" + (++generalCount));
+	                        ticketEntity.setStatus(TicketStatus.CONFIRM);
+	                    } else {
+	                        ticketEntity.setStatus(TicketStatus.WAITING);
+	                    }
+	                    break;
+	                default:
+	                    // Handle invalid coach type
+	                    break;
+	            }
+
+	            // Save the ticket entity
+	            ticketDao.save(ticketEntity);
+	            ticketEntities.add(ticketEntity);
+
+	            // Add passenger to the ticket
+	            PassengerDTO passengerDTO = ticketDTO.getPassenger();
+	            PassengerEntity passengerEntity = new PassengerEntity();
+	            passengerEntity.setPassengerName(passengerDTO.getPassengerName());
+	            passengerEntity.setGender(passengerDTO.getGender());
+	            passengerEntity.setPassengerAge(passengerDTO.getPassengerAge());
+	            passengerEntity.setTicket(ticketEntity); // Associate passenger with ticket
+	            passengerDao.save(passengerEntity);
+	            ticketEntity.setPassengerEntity(passengerEntity);
+	        }
+	    } else {
+	        // Handle case where coach counts are not available
+	        // Set all tickets to waiting status
+	        for (TicketDTO ticketDTO : booking.getTickets()) {
+	            TicketEntity ticketEntity = TicketServiceImpl.convertDtoToEntity(ticketDTO);
+	            ticketEntity.setBooking(newBooking);
+	            ticketEntity.setStatus(TicketStatus.WAITING);
+
+	            // Save the ticket entity
+	            ticketDao.save(ticketEntity);
+	            ticketEntities.add(ticketEntity);
+
+	            // Add passenger to the ticket
+	            PassengerDTO passengerDTO = ticketDTO.getPassenger();
+	            PassengerEntity passengerEntity = new PassengerEntity();
+	            passengerEntity.setPassengerName(passengerDTO.getPassengerName());
+	            passengerEntity.setGender(passengerDTO.getGender());
+	            passengerEntity.setPassengerAge(passengerDTO.getPassengerAge());
+	            passengerEntity.setTicket(ticketEntity); // Associate passenger with ticket
+	            passengerDao.save(passengerEntity);
+	            ticketEntity.setPassengerEntity(passengerEntity);
+	        }
+	    }
+		return savedBookingDTO;
+
+	}
+	
+	
+	/*
 	@Override
 	public BookingDTO addNewBooking(BookingDTO booking) {
 	    // Convert DTO to entity
@@ -183,7 +298,8 @@ public class BookingServiceImpl implements BookingService {
 
 	    // Convert and save passengers
 //	    List<PassengerEntity> passengerEntities = new ArrayList<>();
-//	    for (PassengerDTO passengerDTO : booking.getPassengers()) {
+//	   
+//	    for (PassengerDTO passengerDTO : booking.getTickets().getPassenger()) {
 //	        PassengerEntity passengerEntity = new PassengerEntity();
 //	        // Map passengerDTO to passengerEntity attributes
 //	        passengerEntity.setPassengerName(passengerDTO.getPassengerName());
@@ -279,6 +395,90 @@ public class BookingServiceImpl implements BookingService {
 //		// BookingEntity newBooking = bookingDao.save(bookingEntity);
 //		return convertEntityToDto(newBooking);
 //	}
+ */
 	
+	
+	/*
+	// working just seat number is getting repeated
+	@Override
+	public BookingDTO addNewBooking(BookingDTO booking) {
+	    // Convert DTO to entity
+	    BookingEntity newBooking = convertDtoToEntity(booking);
 
+	    // Calculate the total capacity of the train based on coach type
+	    Coaches coach = booking.getCoachType();
+	    int totalCapacity = 0;
+	    if(coach.toString() == "SLEEPER") {
+	    	totalCapacity = newBooking.getTrain().getSleeperSeats();
+	    }
+	    if(coach.toString() == "AC") {
+	    	totalCapacity = newBooking.getTrain().getAcSeats();
+	    }
+	    if(coach.toString() == "GENERAL") {
+	    	totalCapacity = newBooking.getTrain().getGeneralSeats();
+	    }
+
+	    // Calculate the number of tickets in this booking
+	    int numberOfTickets = booking.getTickets().size();
+
+	    // Check if there are available seats or if waiting list should be used
+	    boolean useWaitingList = false;
+	    if (totalCapacity - numberOfTickets < 0) {
+	        useWaitingList = true;
+	    }
+
+	    // Save the new booking entity
+	    bookingDao.save(newBooking);
+
+	    // Convert the saved entity back to DTO
+	    BookingDTO savedBookingDTO = convertEntityToDto(newBooking);
+
+	    // Convert and save tickets
+	    List<TicketEntity> ticketEntities = new ArrayList<>();
+	    int seatNumber = 1;
+	    for (TicketDTO ticketDTO : booking.getTickets()) {
+	        TicketEntity ticketEntity = TicketServiceImpl.convertDtoToEntity(ticketDTO);
+	        ticketEntity.setBooking(newBooking);
+	        
+	        // Set seat number based on availability
+	        if (!useWaitingList) {
+	            if (seatNumber <= totalCapacity) {
+	                String coachPrefix = newBooking.getCoachType().toString().substring(0, 2).toUpperCase();
+	                ticketEntity.setSeatNumber(coachPrefix + seatNumber++);
+	                ticketEntity.setStatus(TicketStatus.CONFIRM);
+	            } else {
+	                ticketEntity.setStatus(TicketStatus.WAITING);
+	            }
+	        } else {
+	            ticketEntity.setStatus(TicketStatus.WAITING);
+	        }
+
+	        // Save the ticket entity
+	        
+//	        ticketEntities.add(ticketEntity);
+
+	        // Add passengers to the ticket
+	        PassengerDTO passengerDTO = ticketDTO.getPassenger();
+//	        List<PassengerEntity> passengerEntities = new ArrayList<>();
+//	        for (PassengerDTO passengerDTO : passengers) {
+	            PassengerEntity passengerEntity = new PassengerEntity();
+	            passengerEntity.setPassengerName(passengerDTO.getPassengerName());
+	            passengerEntity.setGender(passengerDTO.getGender());
+	            passengerEntity.setPassengerAge(passengerDTO.getPassengerAge());
+	            passengerEntity.setTicket(ticketEntity); // Associate passenger with ticket
+	            passengerDao.save(passengerEntity);
+//	            passengerEntities.add(passengerEntity);
+	            ticketEntity.setPassengerEntity(passengerEntity);
+//	        }
+	        ticketDao.save(ticketEntity);
+	    }
+	    savedBookingDTO.setTickets(ticketEntities.stream()
+	            .map(TicketServiceImpl::convertEntityToDto)
+	            .collect(Collectors.toSet()));
+
+	    return savedBookingDTO;
+	}
+	*/
+	
+	
 }
