@@ -1,5 +1,7 @@
 package com.app.entities;
 
+import java.util.List;
+
 import javax.persistence.AttributeOverride;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,6 +10,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
@@ -44,7 +47,8 @@ public class TicketEntity extends BaseEntity {
 //	@Column(name = "aadhar_number", length = 10)
 //	private Long aadharNumber;
 
-//	@OneToOne(fetch = FetchType.LAZY)
-//	@JoinColumn(name = "passenger_id_fk", referencedColumnName = "passenger_id")
-//	private PassengerEntity passengerEntity;
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "passenger_id_fk", referencedColumnName = "passenger_id")
+	private PassengerEntity passengerEntity;
+
 }

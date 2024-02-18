@@ -31,10 +31,25 @@ public interface TrainDAO extends JpaRepository<TrainEntity, Long> {
 //	Optional<SeatAvailabilityDTO> findCoachCountsByTrainNumberAndDateOfJourney(@Param("trainNumber") Long trainNumber,
 //			@Param("dateOfJourney") LocalDate dateOfJourney);
 
+	
 	@Query(value = "SELECT t.train_number, t.date_of_journey, t.ac_count, t.sleeper_count, t.general_count "
 			+ "FROM train_journey_coach_summary t "
 			+ "WHERE t.train_number = :trainNumber AND t.date_of_journey = :dateOfJourney", nativeQuery = true)
 	Optional<Object[]> findCoachCountsByTrainNumberAndDateOfJourney(@Param("trainNumber") Long trainNumber,
 			@Param("dateOfJourney") LocalDate dateOfJourney);
+			
+			
+	
+	@Query(value = "SELECT t.ac_count, t.sleeper_count, t.general_count " +
+            "FROM train_journey_coach_summary t " +
+            "WHERE t.train_number = :trainNumber AND t.date_of_journey = :dateOfJourney",
+    nativeQuery = true)
+	Optional<List<Integer[]>> findCoachCountByTrainNumberAndDateOfJourney(
+     @Param("trainNumber") Long trainNumber,
+     @Param("dateOfJourney") LocalDate dateOfJourney);
+
+
+
+
 
 }
