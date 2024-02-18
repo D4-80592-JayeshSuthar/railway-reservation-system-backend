@@ -1,0 +1,75 @@
+-- Procedure 1 --> Procedure to insert entry in refunds table and delete that entry from waiting_list table when the journeyDate is passed
+
+DELIMITER $$
+
+CREATE PROCEDURE ProcessExpiredWaitingListRefunds()
+BEGIN
+    -- Temporary table to store ticket IDs and refund amounts
+    CREATE TEMPORARY TABLE IF NOT EXISTS tmp_refund_info (
+        ticket_id_fk BIGINT,
+        amount DOUBLE
+    );
+    
+    -- Populate the temporary table with ticket IDs and corresponding refund amounts
+    INSERT INTO tmp_refund_info (ticket_id_fk, amount)
+    SELECT w.ticket_id_fk, v.cost_per_ticket
+    FROM waiting_list w
+    JOIN booking_ticket_passenger_details b ON w.ticket_id_fk = b.ticket_id
+    JOIN view_ticket_summary v ON b.pnr_number = v.pnr_number
+    WHERE v.date_of_journey < CURDATE();
+
+    -- Insert records into the refunds table from the temporary table
+    INSERT INTO refunds (amount, reason, refund_status, ticket_id_fk)
+    SELECT amount, 'WAITING_LIST', b'0', ticket_id_fk
+    FROM tmp_refund_info;
+
+    -- Delete entries from the waiting_list table that are in the temporary table
+    DELETE FROM waiting_list
+    WHERE ticket_id_fk IN (SELECT ticket_id_fk FROM tmp_refund_info);
+
+    -- Drop the temporary table
+    DROP TEMPORARY TABLE IF EXISTS tmp_refund_info;
+END$$
+
+DELIMITER ;
+
+-- Drop procedure ProcessExpiredWaitingListRefunds;
+
+
+-- Procedure 2 -->Stored procedure to update ticket.status and insert that ticket into refunds table when train is can cancelled
+DELIMITER $$
+
+CREATE PROCEDURE ProcessCancelledTrainRefunds(IN trainNum BIGINT, IN journeyDate DATE)
+BEGIN
+    -- Update ticket status to 'CANCEL'
+    UPDATE tickets
+    JOIN booking_ticket_passenger_details ON tickets.pnr_number = booking_ticket_passenger_details.pnr_number
+    SET tickets.status = 'CANCEL'
+    WHERE booking_ticket_passenger_details.train_number = trainNum
+    AND booking_ticket_passenger_details.date_of_journey = journeyDate;
+
+    -- Insert refund records for affected tickets
+    INSERT INTO refunds (amount, reason, refund_status, ticket_id_fk)
+    SELECT view_ticket_summary.cost_per_ticket, 'TRAIN_CANCEL', b'0', booking_ticket_passenger_details.ticket_id
+    FROM booking_ticket_passenger_details
+   -- JOIN booking_ticket_passenger_details ON tickets.pnr_number = booking_ticket_passenger_details.pnr_number
+    JOIN view_ticket_summary ON booking_ticket_passenger_details.pnr_number = view_ticket_summary.pnr_number
+    WHERE booking_ticket_passenger_details.train_number = trainNum
+    AND booking_ticket_passenger_details.date_of_journey = journeyDate;
+END$$
+
+DELIMITER ;
+
+-- The Above procedure is internally called by AfterTrainCancelled Trigger
+
+
+
+-- Event Handler --> If required
+-- Alternative for java wala scheduler , it is an event listener
+-- To call the procedure once every day
+SET GLOBAL event_scheduler = ON;
+CREATE EVENT IF NOT EXISTS Event_ProcessExpiredWaitingListRefunds
+ON SCHEDULE EVERY 1 DAY
+STARTS (TIMESTAMP(CURRENT_DATE) + INTERVAL 1 DAY)
+DO
+  CALL ProcessExpiredWaitingListRefunds();

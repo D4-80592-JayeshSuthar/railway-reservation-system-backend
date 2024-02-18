@@ -1,0 +1,65 @@
+-- View 1 --> Clubs the bookings+tickets+passengers tables to show all booking details 
+
+
+CREATE VIEW booking_ticket_passenger_details AS
+SELECT
+    b.pnr_number,
+    b.coach_type,
+    b.user_id_fk AS user_id,
+    b.train_number_fk AS train_number,
+    b.date_of_journey,
+    b.booking_date_time,
+    b.from_station,
+    b.to_station,
+    b.total_amount,
+    t.ticket_id AS ticket_id,
+    t.seat_number,
+    t.status AS ticket_status,
+    p.passenger_id AS passenger_id,
+    p.passenger_name,
+    p.gender,
+    p.passenger_age
+FROM
+    bookings b
+INNER JOIN tickets t ON b.pnr_number = t.pnr_number
+LEFT JOIN passengers p ON t.ticket_id = p.ticket_id_fk;
+		
+desc booking_ticket_passenger_details;
+select * from booking_ticket_passenger_details;
+		
+
+-- View 2 --> View based on the above view which keeps track of the number of seats(AC+SL+GEN) for each train for a particular date
+
+CREATE VIEW train_journey_coach_summary AS
+SELECT
+	tbv.train_number ,
+	tbv.date_of_journey,
+	SUM(CASE WHEN tbv.coach_type = 'AC' THEN 1 ELSE 0 END) AS ac_count,
+	SUM(CASE WHEN tbv.coach_type = 'Sleeper' THEN 1 ELSE 0 END) AS sleeper_count,
+	SUM(CASE WHEN tbv.coach_type = 'General' THEN 1 ELSE 0 END) AS general_count
+FROM
+	booking_ticket_passenger_details tbv
+GROUP BY
+	tbv.train_number,
+	tbv.date_of_journey;
+		
+desc train_journey_coach_summary;
+select * from train_journey_coach_summary;
+
+
+-- View 3 --> View to count the number of seats in a particular booking along with the cost per ticket and date of journey.
+
+CREATE VIEW view_ticket_summary AS
+SELECT 
+    pnr_number, 
+    COUNT(ticket_id) AS ticket_count, 
+    date_of_journey,
+    total_amount/COUNT(ticket_id) AS cost_per_ticket
+FROM 
+    booking_ticket_passenger_details
+GROUP BY 
+    pnr_number, 
+    date_of_journey;
+
+desc view_ticket_summary;
+select * from view_ticket_summary
