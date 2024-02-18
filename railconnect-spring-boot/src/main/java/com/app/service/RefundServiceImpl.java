@@ -38,7 +38,7 @@ public class RefundServiceImpl implements RefundService {
 	private RefundDAO refundDao;
 	
 	@Override
-    public RefundResposeDTO cancelTicket(Long bookingId, Long ticketId,Double amount) 
+    public RefundResposeDTO cancelTicket(Long bookingId, Long ticketId) 
     		throws InvalidBookingException, TicketNotFoundException, CancellationNotAllowedException {
         BookingEntity booking = bookingDao.findById(bookingId)
                 .orElseThrow(() -> new InvalidBookingException("Booking not found with ID: " + bookingId));
@@ -59,8 +59,11 @@ public class RefundServiceImpl implements RefundService {
      
         // Here we have to implement the logic of amount which will come from frontend
         
+        int numberOfTickets = booking.getTickets().size();
+        Double amountPerTicket = booking.getTotalAmount() / numberOfTickets;
+        
         // 5. Calculate refund amount (if applicable)
-        Double refundAmount = calculateRefundAmount(amount); // Implement your refund calculation logic
+        Double refundAmount = calculateRefundAmount(amountPerTicket); // Implement your refund calculation logic
         
 
         // 7. Update ticket status to "CANCELLED"
@@ -72,7 +75,7 @@ public class RefundServiceImpl implements RefundService {
         // 8. Create and save a refund entity (if applicable)
         RefundResposeDTO rrdto = createRefund(ticket, refundAmount);
         return rrdto; // Return the refund entity
-    
+   
     }
 
     private boolean canCancelTicket(TicketEntity ticket,Long bookingId) {
