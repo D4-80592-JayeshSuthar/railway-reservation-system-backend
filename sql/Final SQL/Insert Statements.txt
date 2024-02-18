@@ -17,14 +17,14 @@ INSERT INTO routes (destination, source) VALUES
 
 -- 2. Trains Table Entries
 
-INSERT INTO trains (train_number, train_name, arrival_time, departure_time, base_fare, active_status, cancel_status, runs_on, route_id,
+INSERT INTO trains (train_number, train_name, arrival_time, departure_time, base_fare, active_status, 
+cancel_status, runs_on, route_id,
  ac_seats, sleeper_seats, general_seats) 
 VALUES 
 (1001,'Duranto Express', '09:00:00', '20:00:00', 270.00, 1,  0, 'Mon,Wed,Fri', 1, 25, 25, 15),
 (1002,'RajDhani', '07:00:00', '18:00:00', 300.00, 1,  0, 'Tue,Thu,Sat', 1, 30, 20, 10),
 (1003,'Tejas Express', '18:00:00', '05:00:00', 220.00, 1,  0, 'Sun,Wed', 1, 20, 25, 15),
 (1004,'Sampark Kranti Express', '02:00:00', '14:00:00', 200.00, 1,  0, 'Mon,Thu', 1, 15, 25, 20),
-(1005,'GaribRath', '07:00:00', '22:00:00', 150.00, 1,  0, 'Tue,Thu,Sat', 3, 10, 25, 30),
 (1005,'Vande Bharat', '05:30:00', '19:30:00', 350.00, 1, 0, 'Tue,Sun', 3, 20, 23, 12),
 (1006,'Humsafar Express', '20:00:00', '12:00:00', 200.00, 1, 0, 'Wed,Sat', 2, 20, 22, 17),
 (1007,'Gatimaan Express', '09:30:00', '23:30:00', 300.00, 1, 0, 'Sun,Tue,Fri', 2, 100, 150, 80),
@@ -39,44 +39,42 @@ VALUES
 (1015,'Gatimaan Express', '09:30:00', '23:30:00', 300.00, 1, 0, 'Mon,Wed,Sat', 8, 100, 150, 80),
 
 (1016,'Mahamana Express', '08:00:00', '23:00:00', 170.00, 1, 0, 'Mon,Thu', 4, 21, 26, 16),
-(1017,'Antyodaya Express', '02:00:00', '16:00:00', 190.00, 1, 0, 'Tue,Thu,Sat', , 23, 25, 14),
+(1017,'Antyodaya Express', '02:00:00', '16:00:00', 190.00, 1, 0, 'Tue,Thu,Sat',4 , 23, 25, 14),
 (1018,'Jan Shatabdi', '11:00:00', '01:30:00', 200.00, 1, 0, 'Wed,Sun', 4, 18, 22, 16),
 (1019,'Interstate Express', '12:00:00', '22:45:00', 150.00, 1, 0, 'Mon,Tue', 6, 19, 20, 18),
-(1020,'Yuva Express', '14:00:00', '24:00:00', 170.00, 1, 0, 'Wed,Fri', 6, 24, 21, 16),
+(1020,'Yuva Express', '14:00:00', '23:00:00', 170.00, 1, 0, 'Wed,Fri', 6, 24, 21, 16),
 
 (1021,'Mahamana Express', '08:00:00', '23:00:00', 170.00, 1, 0, 'Wed,Sat', 10, 21, 26, 16),
 (1022,'Antyodaya Express', '02:00:00', '16:00:00', 190.00, 1, 0, 'Wed,Fri,Mon', 10, 23, 25, 14),
 (1023,'Jan Shatabdi', '11:00:00', '01:30:00', 200.00, 1, 0, 'Fri,Mon', 10, 18, 22, 16),
 (1024,'Interstate Express', '12:00:00', '22:45:00', 150.00, 1, 0, 'Mon,Tue', 7, 19, 20, 18),
-(1025,'Yuva Express', '14:00:00', '24:00:00', 170.00, 1, 0, 'Wed,Fri', 7, 24, 21, 16),
+(1025,'Yuva Express', '14:00:00', '23:00:00', 170.00, 1, 0, 'Wed,Fri', 7, 24, 21, 16),
 
 (1027,'Orient Express', '20:00:00', '12:00:00', 230.00, 1, 0, 'Wed,Sat', 9, 20, 22, 17),
 (1028,'Rajya Rani Express', '03:30:00', '23:30:00', 210.00, 1, 0, 'Sun,Tue,Fri', 9, 22, 22, 18),
 (1029,'Kavi Guru Express', '10:00:00', '02:00:00', 270.00, 1, 0, 'Thu,Sun', 9, 18, 20, 20),
 (1030,'Mahalaxmi Express', '09:30:00', '01:30:00', 250.00, 1, 0, 'Mon,Wed,Fri', 9, 19, 24, 16),
 
-(1030,'Deewani Express', '09:30:00', '01:30:00', 300.00, 1, 0, 'Mon,Wed,Fri', 12, 16, 22, 20),
-(1030,'Ahimsa Express', '09:30:00', '01:30:00', 300.00, 1, 0, 'Tue,thu,Sat', 12, 18, 20, 19),
-(1030,'Taj Express', '09:30:00', '01:30:00', 300.00, 1, 0, 'Sun,Wed,Fri', 12, 20, 21, 17),
-(1030,'Shakuntala Express', '09:30:00', '01:30:00', 300.00, 1, 0, 'Wed,Fri,Sun', 12, 18, 22, 20);
-
-select * from trains;
+(1031,'Deewani Express', '09:30:00', '01:30:00', 300.00, 1, 0, 'Mon,Wed,Fri', 12, 16, 22, 20),
+(1032,'Ahimsa Express', '09:30:00', '01:30:00', 300.00, 1, 0, 'Tue,thu,Sat', 12, 18, 20, 19),
+(1033,'Taj Express', '09:30:00', '01:30:00', 300.00, 1, 0, 'Sun,Wed,Fri', 12, 20, 21, 17),
+(1034,'Shakuntala Express', '09:30:00', '01:30:00', 300.00, 1, 0, 'Wed,Fri,Sun', 12, 18, 22, 20);
 
 
 -- 5. Users Table Entries
 
-INSERT INTO users (birth_date, country, email, first_name, gender, last_name, phone_number, password, state, username, zip_code) 
+INSERT INTO users (birth_date, country, email, first_name, gender, last_name, mobile_number, password, state, username, zip,is_active) 
 VALUES
-('1990-01-01', 'India', 'yash@gmail.com', 'Yash', 'MALE', 'Pathak', '9855463210', 'yash1234', 'Maharashtra', 'yash_pathak', '123456'),
-('1992-03-15', 'USA', 'jane@gmail.com', 'Jane', 'FEMALE', 'Smith', '8773443211', 'jane1234', 'California', 'jane_smith', '654321'),
-('1985-07-20', 'Canada', 'alice@gmail.com', 'Alice', 'FEMALE', 'Johnson', '7876073212', 'alice1234', 'Ontario', 'alice_johnson', '987654'),
-('1998-02-27', 'India', 'Meet@gmail.com', 'Meet', 'MALE', 'Vasani', '7776503212', 'meet1234', 'Gujarat', 'meet_vasani', '422010'),
-('1999-11-09', 'India', 'jayesh@gmail.com', 'Jayesh', 'MALE', 'Suthar', '8876643212', 'jayesh1234', 'Gujarat', 'jayesh_suthar', '422009'),
-('1989-04-12', 'India', 'Akshata@gmail.com', 'Akshata', 'FEMALE', 'Dubey', '7020643212', 'akshata1234', 'MP', 'akshata_dubey', '324059'),
-('1998-01-17', 'India', 'rohan@gmail.com', 'Rohan', 'MALE', 'Patil', '9976643287', 'rohan1234', 'Maharashtra', 'rohan_patil', '567112'),
-('1993-07-02', 'India', 'aashi@gmail.com', 'Aashi', 'FEMALE', 'Dixit', '8770643212', 'aashi1234', 'Rajasthan', 'aashi_dixit', '672079'),
-('1990-12-01', 'India', 'Ajay@gmail.com', 'Ajay', 'MALE', 'Budhewar', '7906643255', 'ajay1234', 'AP', 'ajay_budhewar', '513069'),
-('1994-04-17', 'India', 'rohit@gmail.com', 'Rohit', 'MALE', 'Gaikar', '7970523212', 'rohit1234', 'Maharashtra', 'rohit_gaikar', '567110');
+('1990-01-01', 'India', 'yash@gmail.com', 'Yash', 'MALE', 'Pathak', '9855463210', 'yash1234', 'Maharashtra', 'yash_pathak', '123456',1),
+('1998-02-27', 'India', 'Meet@gmail.com', 'Meet', 'MALE', 'Vasani', '7776503212', 'meet1234', 'Gujarat', 'meet_vasani', '422010',1),
+('1999-11-09', 'India', 'jayesh@gmail.com', 'Jayesh', 'MALE', 'Suthar', '8876643212', 'jayesh1234', 'Gujarat', 'jayesh_suthar', '422009',1),
+('1992-03-15', 'India', 'Ravi@gmail.com', 'ravi', 'FEMALE', 'Kore', '8773443211', 'ravi1234', 'MP', 'ravi', '654321',1),
+('1985-07-20', 'India', 'smita@gmail.com', 'Smita', 'FEMALE', 'Kadam', '7876073212', 'alice1234', 'Karnataka', 'junnon', '987654',1),
+('1989-04-12', 'India', 'Akshata@gmail.com', 'Akshata', 'FEMALE', 'Dubey', '7020643212', 'akshata1234', 'MP', 'akshata_dubey', '324059',1),
+('1998-01-17', 'India', 'rohan@gmail.com', 'Rohan', 'MALE', 'Patil', '9976643287', 'rohan1234', 'Maharashtra', 'rohan_patil', '567112',1),
+('1993-07-02', 'India', 'aashi@gmail.com', 'Aashi', 'FEMALE', 'Dixit', '8770643212', 'aashi1234', 'Rajasthan', 'aashi_dixit', '672079',1),
+('1990-12-01', 'India', 'Ajay@gmail.com', 'Ajay', 'MALE', 'Budhewar', '7906643255', 'ajay1234', 'AP', 'ajay_budhewar', '513069',1),
+('1994-04-17', 'India', 'rohit@gmail.com', 'Rohit', 'MALE', 'Gaikar', '7970523212', 'rohit1234', 'Maharashtra', 'rohit_gaikar', '567110',1);
 
 
 
@@ -84,25 +82,132 @@ VALUES
 
 -- 4. Bookings Table Entries
 
-INSERT INTO bookings ( pnr_number, booking_date_time, coach_type, date_of_journey, from_station, to_station, total_amount, train_number_fk, user_id_fk) 
+INSERT INTO bookings ( pnr_number, booking_date_time, coach_type, date_of_journey, 
+from_station, to_station, total_amount, train_number_fk, user_id_fk) 
 VALUES 
-(11001,'2024-01-14 12:34:56.789', 'AC', '2024-03-4', 'Delhi', 'Mumbai', 1620.00, 1001, 1),
-(11002,'2024-01-09 12:34:56.789', 'AC', '2024-03-4', 'Delhi', 'Mumbai', 1215.00, 1001, 1),
-(11003,'2024-01-22 12:34:56.789', 'AC', '2024-03-4', 'Delhi', 'Mumbai', 405.00, 1001, 1),
-(11004,'2023-12-15 12:34:56.789', 'AC', '2024-03-4', 'Delhi', 'Mumbai', 810.00, 1001, 1),
-(11005,'2023-12-29 12:34:56.789', 'AC', '2024-03-4', 'Delhi', 'Mumbai', 1620.00, 1001, 1),
-(11005,'2023-12-29 12:34:56.789', 'AC', '2024-03-4', 'Delhi', 'Mumbai', 1620.00, 1001, 1),
-(11005,'2023-12-29 12:34:56.789', 'AC', '2024-03-4', 'Delhi', 'Mumbai', 1620.00, 1001, 1),
-(11005,'2023-12-29 12:34:56.789', 'AC', '2024-03-4', 'Delhi', 'Mumbai', 1620.00, 1001, 1),
-(11006,'2023-11-30 12:34:56.789', 'AC', '2024-03-4', 'Delhi', 'Mumbai', 1215.00, 1001, 1);
-
-
+(11001,'2024-01-14 12:14:56.789', 'AC', '2024-11-11', 'Delhi', 'Mumbai', 1620.00, 1001, 1),
+(11002,'2024-01-09 02:24:56.789', 'SLEEPER', '2024-02-04', 'Delhi', 'Banglore', 1215.00, 1003, 1),
+(11003,'2024-02-22 22:56:56.789', 'GENERAL', '2024-04-11', 'Delhi', 'Kolkata', 405.00, 1029, 1),
+(11004,'2023-12-15 16:44:56.789', 'AC', '2024-05-21', 'Mumbai', 'Kolkata', 810.00, 1002, 2),
+(11005,'2023-12-29 04:23:56.789', 'SLEEPER', '2024-06-14', 'Mumbai', 'Delhi', 1702.00, 1028, 2),
+(11006,'2023-12-29 07:11:56.789', 'GENERAL', '2024-07-23', 'Mumbai', 'Banglore', 2000.00, 1032, 2),
+(11007,'2023-12-29 19:32:56.789', 'AC', '2024-08-17', 'Banglore', 'Mumbai', 2500.00, 1027, 3),
+(11008,'2023-12-29 12:22:56.789', 'SLEEPER', '2024-09-02', 'Banglore', 'Delhi', 900.00, 1022, 3),
+(11009,'2023-11-30 10:11:56.789', 'GENERAL', '2024-10-06', 'Banglore', 'Kolkata', 400.00, 1012, 3);
 
 
 -- 5. Ticket Table Entries
 
-INSERT INTO TICKETS (seat_number, status, pnr_number) 
-VALUES
-('AC1','CONFIRM',11001),
+INSERT INTO tickets (pnr_number, seat_number, status) 
+VALUES 
+(11001, 'AC11', 'CONFIRM'),
+(11001, 'AC22', 'CONFIRM'),
+(11001, 'AC33', 'CONFIRM'),
+(11001, 'AC44', 'WAITING'),
+
+(11002, 'SL21', 'CONFIRM'),
+(11002, 'SL22', 'CONFIRM'),
+(11002, 'SL23', 'CONFIRM'),
+(11002, 'SL24', 'CONFIRM'),
+
+(11003, 'GE32', 'CONFIRM'),
+(11003, 'GE33', 'CONFIRM'),
+(11003, 'GE34', 'WAITING'),
+
+(11004, 'AC51', 'CONFIRM'),
+(11004, 'AC52', 'CONFIRM'),
+(11004, 'AC53', 'WAITING'),
+(11004, 'AC54', 'WAITING'),
+
+(11005, 'SL79', 'CONFIRM'),
+(11005, 'SL80', 'WAITING'),
+(11005, 'SL81', 'WAITING'),
+(11005, 'SL82', 'WAITING'),
+
+(11006, 'GE101', 'WAITING'),
+(11006, 'GE102', 'WAITING'),
+(11006, 'GE103', 'WAITING'),
+
+(11007, 'AC49', 'CONFIRM'),
+(11007, 'AC50', 'CONFIRM'),
+(11007, 'AC51', 'CONFIRM'),
+(11007, 'AC52', 'CONFIRM'),
+
+(11008, 'SL99', 'CONFIRM'),
+(11008, 'SL100', 'WAITING'),
+
+(11009, 'GE22', 'CONFIRM'),
+(11009, 'GE23', 'CONFIRM'),
+(11009, 'GE24', 'CONFIRM');
+
+
+-- 6. passenger enteries
+
+-- Ticket 11001
+INSERT INTO passengers (gender, passenger_age, passenger_name, ticket_id_fk) 
+VALUES 
+('MALE', 30, 'Aarav Patel', 1),
+('FEMALE', 28, 'Ananya Singh', 2),
+('MALE', 45, 'Rohan Gupta', 3),
+('FEMALE', 35, 'Priya Sharma', 4);
+
+-- Ticket 11002
+INSERT INTO passengers (gender, passenger_age, passenger_name, ticket_id_fk) 
+VALUES 
+('MALE', 24, 'Aryan Kumar', 5),
+('FEMALE', 27, 'Diya Mishra', 6),
+('MALE', 50, 'Vikram Singh', 7),
+('FEMALE', 32, 'Neha Verma', 8);
+
+-- Ticket 11003
+INSERT INTO passengers (gender, passenger_age, passenger_name, ticket_id_fk) 
+VALUES 
+('MALE', 38, 'Kabir Tiwari', 9),
+('FEMALE', 40, 'Pooja Malhotra', 10),
+('MALE', 55, 'Rajesh Yadav', 11);
+
+-- Ticket 11004
+INSERT INTO passengers (gender, passenger_age, passenger_name, ticket_id_fk) 
+VALUES 
+('FEMALE', 22, 'Sakshi Reddy', 12),
+('MALE', 28, 'Aditya Kumar', 13),
+('FEMALE', 33, 'Sneha Gupta', 14),
+('MALE', 37, 'Rahul Singh', 15);
+
+-- Ticket 11005
+INSERT INTO passengers (gender, passenger_age, passenger_name, ticket_id_fk) 
+VALUES 
+('FEMALE', 29, 'Neha Srinivasan', 16),
+('MALE', 31, 'Ravi Iyer', 17),
+('FEMALE', 48, 'Divya Venkatesh', 18),
+('MALE', 25, 'Vishal Menon', 19);
+
+-- Ticket 11006
+INSERT INTO passengers (gender, passenger_age, passenger_name, ticket_id_fk) 
+VALUES 
+('FEMALE', 26, 'Anjali Desai', 20),
+('MALE', 41, 'Amit Shah', 21),
+('FEMALE', 34, 'Preeti Jain', 22);
+
+-- Ticket 11007
+INSERT INTO passengers (gender, passenger_age, passenger_name, ticket_id_fk) 
+VALUES 
+('MALE', 39, 'Rahul Sharma', 23),
+('FEMALE', 36, 'Aarti Gupta', 24),
+('MALE', 43, 'Ashish Kumar', 25),
+('FEMALE', 30, 'Sneha Choudhury', 26);
+
+-- Ticket 11008
+INSERT INTO passengers (gender, passenger_age, passenger_name, ticket_id_fk) 
+VALUES 
+('MALE', 28, 'Kunal Bhat', 27),
+('FEMALE', 25, 'Neha Joshi', 28);
+
+-- Ticket 11009
+INSERT INTO passengers (gender, passenger_age, passenger_name, ticket_id_fk) 
+VALUES 
+('MALE', 33, 'Rohit Gupta', 29),
+('FEMALE', 29, 'Sapna Singh', 30),
+('MALE', 46, 'Amit Kumar', 31);
 
 

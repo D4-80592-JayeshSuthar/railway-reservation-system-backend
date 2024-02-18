@@ -40,7 +40,7 @@ public class TrainEntity {
 	@SequenceGenerator(name = "train_sequence_generator", initialValue = 1100)
 	private long trainNumber;
 
-	@Column(name = "train_name", length = 20, nullable = false)
+	@Column(name = "train_name", nullable = false)
 	private String trainName;
 
 	@Column(nullable = false)
