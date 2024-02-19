@@ -14,8 +14,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.app.dao.UserEntityDao;
 import com.app.dto.SigninRequest;
 import com.app.dto.SigninResponse;
+import com.app.dto.UserDetailDTO;
 import com.app.entities.UserEntity;
 import com.app.security.JwtUtils;
 import com.app.service.UserService;
@@ -31,6 +33,7 @@ public class UserSignInSignUpController {
 
 	@Autowired
 	private AuthenticationManager mgr;
+
 
 	// sign up
 	@PostMapping("/signup")
@@ -58,8 +61,9 @@ public class UserSignInSignUpController {
 						(reqDTO.getEmail(), reqDTO.getPassword()));
 		System.out.println(verifiedAuth.getClass());// Custom user details
 		// => auth success
+		UserDetailDTO user = userService.getUserDetailsByEmail(reqDTO.getEmail());
 		return ResponseEntity
-				.ok(new SigninResponse(utils.generateJwtToken(verifiedAuth), "Successful Authentication!!!"));
+				.ok(new SigninResponse(user.getId(),utils.generateJwtToken(verifiedAuth), "Successful Authentication!!!"));
 
 	}
 

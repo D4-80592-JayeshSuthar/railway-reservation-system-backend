@@ -44,7 +44,7 @@ public class SecurityConfig {
 				"/trains/*/cancel","/train/routes","/trains/add","/trains/remove/*","/trains/activate/*","/trains/search","/trains/view","/users/signup",
 				"/users/signin","/users/by-userid/*",
 				"/users/by-email/*","/users/by-username/*","/users/**"
-				,"/v*/api-doc*/**","/users/*","/swagger-ui/**","/refund/**","/feedback/**").permitAll()
+				,"/v*/api-doc*/**","/users/*","/swagger-ui/**","/refund/**","/feedback/**","/admin/**").permitAll()
  
 		// only required for JS clnts (react / angular) : for the pre flight requests
 		.antMatchers(HttpMethod.OPTIONS).permitAll()
