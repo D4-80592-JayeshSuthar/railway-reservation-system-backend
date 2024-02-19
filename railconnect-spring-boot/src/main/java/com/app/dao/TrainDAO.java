@@ -48,8 +48,4 @@ public interface TrainDAO extends JpaRepository<TrainEntity, Long> {
      @Param("trainNumber") Long trainNumber,
      @Param("dateOfJourney") LocalDate dateOfJourney);
 
-
-
-
-
 }

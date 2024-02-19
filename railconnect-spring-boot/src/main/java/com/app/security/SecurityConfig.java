@@ -29,7 +29,6 @@ public class SecurityConfig {
 	@Autowired
 	private CustomAuthenticationEntryPoint authEntry;
 	
-	
 	@Bean
 	public SecurityFilterChain authorizeRequests(HttpSecurity http) throws Exception
 	{

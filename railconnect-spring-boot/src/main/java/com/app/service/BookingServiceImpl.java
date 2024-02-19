@@ -67,6 +67,8 @@ public class BookingServiceImpl implements BookingService {
 	@Autowired
 	private UserEntityDao userDao;
 
+	
+	/* old one
 	@SuppressWarnings("null")
 	@Override
 	public List<BookingDTO> findUserBookings(Long userId) {
@@ -130,11 +132,16 @@ public class BookingServiceImpl implements BookingService {
     	booking.setTickets(new HashSet<TicketDTO>());
     	Set<TicketDTO> tickets = booking.getTickets();
     	
+    	
+    	
     	for (TicketEntity ticket : bookingEntity.getTickets()) {
-    		tickets.add(TicketServiceImpl.convertEntityToDto(ticket));
+    		TicketServiceImpl t = new TicketServiceImpl();
+    		tickets.add(t.convertEntityToDto(ticket));
 		}
         return booking;
     }
+    */
+    
     public BookingEntity convertDtoToEntity(BookingDTO bookingDTO) {
        
     	BookingEntity newBooking = modelMapper.map(bookingDTO, BookingEntity.class);
@@ -148,8 +155,54 @@ public class BookingServiceImpl implements BookingService {
 			.add(TicketServiceImpl.convertDtoToEntity(ticket));
 		}
     	return newBooking;
-        
     }
+    
+    @SuppressWarnings("null")
+    @Override
+    public List<BookingDTO> findUserBookings(Long userId) {
+        List<BookingEntity> userBookings = bookingDao.findByUserId(userId);
+        List<BookingDTO> userBookingDTOs = new ArrayList<>();
+
+        for (BookingEntity booking : userBookings) {
+            BookingDTO bookingDTO = convertEntityToDto(booking);
+            userBookingDTOs.add(bookingDTO);
+        }
+        return userBookingDTOs;
+    }
+
+    public BookingDTO convertEntityToDto(BookingEntity bookingEntity) {
+        BookingDTO bookingDTO = modelMapper.map(bookingEntity, BookingDTO.class);
+        bookingDTO.setUserId(bookingEntity.getUser().getId());
+        bookingDTO.setTrainNumber(bookingEntity.getTrain().getTrainNumber());
+
+        Set<TicketDTO> tickets = new HashSet<>();
+        for (TicketEntity ticketEntity : bookingEntity.getTickets()) {
+            TicketDTO ticketDTO = convertEntityToDto(ticketEntity);
+            tickets.add(ticketDTO);
+        }
+        bookingDTO.setTickets(tickets);
+        return bookingDTO;
+    }
+
+    public TicketDTO convertEntityToDto(TicketEntity ticketEntity) {
+        TicketDTO ticketDTO = new TicketDTO();
+        ticketDTO.setTicketId(ticketEntity.getId());
+        ticketDTO.setSeatNumber(ticketEntity.getSeatNumber());
+        ticketDTO.setStatus(ticketEntity.getStatus());
+
+        PassengerDTO passengerDTO = new PassengerDTO();
+        Optional<PassengerEntity> passengerEntityOptional = passengerDao.findByTicket(ticketEntity);
+        if (passengerEntityOptional.isPresent()) {
+            PassengerEntity passengerEntity = passengerEntityOptional.get();
+            passengerDTO.setPassengerName(passengerEntity.getPassengerName());
+            passengerDTO.setGender(passengerEntity.getGender());
+            passengerDTO.setPassengerAge(passengerEntity.getPassengerAge());
+        }
+        ticketDTO.setPassenger(passengerDTO);
+        return ticketDTO;
+    }
+
+    
 	
 	@SuppressWarnings("null")
 	@Override
@@ -163,6 +216,11 @@ public class BookingServiceImpl implements BookingService {
 		return bookingDTOs;
 	}// Getting all ticket information is not implemented in this method
 
+	
+	
+	
+	
+	
 	
 	// final add booking which is working
 	
@@ -268,7 +326,6 @@ public class BookingServiceImpl implements BookingService {
 	        }
 	    }
 		return savedBookingDTO;
-
 	}
 	
 	
