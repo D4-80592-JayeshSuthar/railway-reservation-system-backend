@@ -429,7 +429,11 @@ public class TrainService {
 //	}
 
 	public List<SearchTrainDTO> getTrainsBySrcDescDate(String src, String des, LocalDate dateOfJourney) {
+//		String day = dateOfJourney.getDayOfWeek().toString().substring(0, 3);
+//		System.out.println(day);
 		String day = dateOfJourney.getDayOfWeek().toString().substring(0, 3);
+		day = day.substring(0, 1).toUpperCase() + day.substring(1).toLowerCase();
+//		System.out.println(day);
 
 		RouteEntity route = routeDao.findBySourceAndDestination(src, des)
 				.orElseThrow(() -> new ResourceNotFoundException("Route not found"));
