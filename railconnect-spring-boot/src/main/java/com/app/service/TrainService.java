@@ -52,7 +52,6 @@ public class TrainService {
 
 	public AddTrainDTO addTrain(AddTrainDTO trainDTO) {
 		TrainEntity trainEntity = convertToEntity(trainDTO);
-//        trainEntity.setRoute(routeService.getRouteById(trainDTO.getRouteId()).toEntity());
 		trainEntity = trainDAO.save(trainEntity);
 		return convertToDTO(trainEntity);
 	}
@@ -72,14 +71,14 @@ public class TrainService {
 		trainEntity.setActiveStatus(false);
 		trainDAO.save(trainEntity);
 	}
-	
+
 	public void activateTrain(Long trainNumber) {
-        TrainEntity trainEntity = trainDAO.findById(trainNumber)
-                .orElseThrow(() -> new ResourceNotFoundException("Train not found"));
-        trainEntity.setCancelStatus(false);
-        trainEntity.setActiveStatus(true);
-        trainDAO.save(trainEntity);
-    }
+		TrainEntity trainEntity = trainDAO.findById(trainNumber)
+				.orElseThrow(() -> new ResourceNotFoundException("Train not found"));
+		trainEntity.setCancelStatus(false);
+		trainEntity.setActiveStatus(true);
+		trainDAO.save(trainEntity);
+	}
 
 	// Method to toggle the status of a train when it starts running
 	public void toggleTrainStatusWhenRunning() {
@@ -111,7 +110,6 @@ public class TrainService {
 			}
 		}
 	}
-
 
 	@SuppressWarnings("unused")
 	private boolean runsOnContainsDay(String runsOn, String day) {
@@ -274,8 +272,6 @@ public class TrainService {
 		return trainEntity;
 	}
 
-
-
 	public List<SearchTrainDTO> getTrainsBySrcDescDate(String src, String des, LocalDate dateOfJourney) {
 //		String day = dateOfJourney.getDayOfWeek().toString().substring(0, 3);
 //		System.out.println(day);
@@ -303,30 +299,33 @@ public class TrainService {
 				searchTrain.setDateOfJourney(dateOfJourney.toString());
 
 				// Populate seat availability details
-				Optional<Object[]> seatsOptional = trainDAO
-						.findCoachCountsByTrainNumberAndDateOfJourney(trainEntity.getTrainNumber(), dateOfJourney);
-				if (seatsOptional.isPresent()) {
-					Object[] seats = seatsOptional.get();
-					if (seats.length > 0) {
-						SeatAvailabilityDTO seatAvailabilityDTO = new SeatAvailabilityDTO();
-						seatAvailabilityDTO.setTrainNumber(trainEntity.getTrainNumber());
-						seatAvailabilityDTO.setDateOfJourney(dateOfJourney);
-						seatAvailabilityDTO.setAcCount((Integer) seats[2]);
-						seatAvailabilityDTO.setSleeperCount((Integer) seats[3]);
-						seatAvailabilityDTO.setGeneralCount((Integer) seats[4]);
+				int acCount = 0;
+				int sleeperCount = 0;
+				int generalCount = 0;
 
-						// Set seat availability details directly to the SearchTrainDTO
-						searchTrain.setAcSeats(trainEntity.getAcSeats() - seatAvailabilityDTO.getAcCount());
-						searchTrain
-								.setSleeperSeats(trainEntity.getSleeperSeats() - seatAvailabilityDTO.getSleeperCount());
-						searchTrain
-								.setGeneralSeats(trainEntity.getGeneralSeats() - seatAvailabilityDTO.getGeneralCount());
-					} else {
-						// Handle no seat availability data
-					}
-				} else {
-					// Handle no seat availability data
-				}
+				Optional<Integer> acOpt = trainDAO
+						.findAcCoachCountByTrainNumberAndDateOfJourney(trainEntity.getTrainNumber(), dateOfJourney);
+				Optional<Integer> sleeperOpt = trainDAO.findSleeperCoachCountByTrainNumberAndDateOfJourney(
+						trainEntity.getTrainNumber(), dateOfJourney);
+				Optional<Integer> generalOpt = trainDAO.findGeneralCoachCountByTrainNumberAndDateOfJourney(
+						trainEntity.getTrainNumber(), dateOfJourney);
+
+				if (acOpt.isPresent())
+					acCount = acOpt.get();
+				if (sleeperOpt.isPresent())
+					sleeperCount = sleeperOpt.get();
+				if (generalOpt.isPresent())
+					generalCount = generalOpt.get();
+				
+				SeatAvailabilityDTO seatAvailabilityDTO = new SeatAvailabilityDTO();
+				seatAvailabilityDTO.setAcCount(acCount);
+				seatAvailabilityDTO.setSleeperCount(sleeperCount);
+				seatAvailabilityDTO.setGeneralCount(generalCount);
+				
+				// Set seat availability details directly to the SearchTrainDTO
+				searchTrain.setAcSeats(trainEntity.getAcSeats() - seatAvailabilityDTO.getAcCount());
+				searchTrain.setSleeperSeats(trainEntity.getSleeperSeats() - seatAvailabilityDTO.getSleeperCount());
+				searchTrain.setGeneralSeats(trainEntity.getGeneralSeats() - seatAvailabilityDTO.getGeneralCount());
 
 				searchTrains.add(searchTrain);
 			}
