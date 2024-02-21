@@ -10,7 +10,6 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -20,8 +19,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 //To enable method level authorization support : pre n post authorization
 public class SecurityConfig {
 	//dep : pwd encoder
-	@Autowired
-	private PasswordEncoder enc;
+//	@Autowired
+//	private PasswordEncoder enc;
 	//dep : custom jwt auth filter
 	@Autowired
 	private JwtAuthenticationFilter jwtFilter;

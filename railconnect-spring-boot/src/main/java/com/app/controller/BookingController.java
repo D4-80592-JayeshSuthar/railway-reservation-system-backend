@@ -36,16 +36,11 @@ public class BookingController {
 		return bookingService.showAllBookings();
 	}
 
-//	@PostMapping("/addnewbooking")
-//	public BookingDTO bookTicktes(@RequestBody BookingDTO bookinDto) {
-//		return bookingService.addNewBooking(bookinDto);
-//	}
-
-	
 	
 	@PostMapping("/addnewbooking")
     public ResponseEntity<String> bookTickets(@RequestBody BookingDTO bookingDTO) {
-		BookingDTO bookedDTO = bookingService.addNewBooking(bookingDTO);
+		System.out.println(bookingDTO.toString());
+		bookingService.addNewBooking(bookingDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body("Booking successfully done");
     }
 }

@@ -34,7 +34,7 @@ public class RouteService {
 
     private RouteDTO convertToDTO(RouteEntity routeEntity) {
         RouteDTO routeDTO = new RouteDTO();
-        routeDTO.setRouteId(routeEntity.getRouteId());
+        routeDTO.setRouteId(routeEntity.getId());
         routeDTO.setSource(routeEntity.getSource());
         routeDTO.setDestination(routeEntity.getDestination());
 //        routeDTO.setIntermediate(routeEntity.getIntermediate());

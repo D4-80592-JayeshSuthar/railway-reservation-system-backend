@@ -5,10 +5,6 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.app.dto.BookingDTO;
-import com.app.dto.NewBookingRequestDTO;
-import com.app.dto.NewBookingResponseDTO;
-import com.app.entities.BookingEntity;
-import com.app.entities.RefundEntity;
 
 
 @Service

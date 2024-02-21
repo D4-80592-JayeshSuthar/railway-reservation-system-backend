@@ -10,6 +10,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import com.app.entities.UserEntity;
 
 public class CustomUserDetails implements UserDetails {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private UserEntity user;
 
 	public CustomUserDetails(UserEntity user) {

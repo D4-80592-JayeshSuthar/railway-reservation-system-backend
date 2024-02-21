@@ -4,7 +4,12 @@ import org.springframework.security.core.AuthenticationException;
 
 public class UserNotActiveException extends AuthenticationException {
 
-    public UserNotActiveException(String message) {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public UserNotActiveException(String message) {
         super(message);
     }
 }
