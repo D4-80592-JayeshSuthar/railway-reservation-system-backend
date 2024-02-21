@@ -1,5 +1,6 @@
 package com.app.entities;
 
+import javax.persistence.AttributeOverride;
 import javax.persistence.Column; 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -15,6 +16,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
+@AttributeOverride(name = "id", column = @Column(name = "admin_id"))
 public class AdminEntity extends BaseEntity{
 
 	@Column(length = 20)

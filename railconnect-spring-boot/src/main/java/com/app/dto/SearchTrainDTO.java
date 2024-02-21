@@ -1,6 +1,5 @@
 package com.app.dto;
 
-import java.time.LocalDate;
 import java.time.LocalTime;
 
 import lombok.AllArgsConstructor;
@@ -20,9 +19,6 @@ public class SearchTrainDTO {
     private LocalTime arrivalTime; //calculate the total journey time in frontend
     private LocalTime departureTime; //using arrivalTime - departureTime
     private Double baseFare;
-//    private boolean activeStatus;
-//    private boolean cancelStatus;
-//    private Long routeId;
     private String runsOn;
 
     //fields other than TrainEntity

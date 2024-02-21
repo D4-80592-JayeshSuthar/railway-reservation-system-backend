@@ -3,8 +3,6 @@ package com.app.dto;
 import java.time.LocalDate;
 
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
 
 import com.app.entities.Gender;

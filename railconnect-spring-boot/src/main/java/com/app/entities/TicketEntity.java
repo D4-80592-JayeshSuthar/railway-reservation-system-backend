@@ -1,8 +1,7 @@
 package com.app.entities;
 
-import java.util.List;
-
 import javax.persistence.AttributeOverride;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -40,14 +39,7 @@ public class TicketEntity extends BaseEntity {
 	@Column(name = "status", length = 10)
 	private TicketStatus status;
 
-//
-//	@Column(name = "passenger_name", length = 50)
-//	private String passengerName;
-//
-//	@Column(name = "aadhar_number", length = 10)
-//	private Long aadharNumber;
-
-	@OneToOne(fetch = FetchType.LAZY)
+	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "passenger_id_fk", referencedColumnName = "passenger_id")
 	private PassengerEntity passengerEntity;
 

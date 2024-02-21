@@ -32,6 +32,7 @@ public class RefundController {
         @PathVariable Long bookingId,
         @PathVariable Long ticketId) {
         RefundResposeDTO refund = refundService.cancelTicket(bookingId, ticketId);
+        System.out.println("Refund Details : "+refund);
 	}
 	
 	 @GetMapping("/getAllRefundList")

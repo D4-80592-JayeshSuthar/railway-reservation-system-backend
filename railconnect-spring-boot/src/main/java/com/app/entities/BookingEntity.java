@@ -3,7 +3,6 @@
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -20,15 +19,14 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.validation.constraints.FutureOrPresent;
+import javax.validation.constraints.Future;
 import javax.validation.constraints.PastOrPresent;
-
-import com.app.dto.PassengerDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Table(name = "bookings")
@@ -36,22 +34,17 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-//@ToString
-//@AttributeOverride(name = "id", column = @Column(name = "pnr_number"))
+@ToString
 public class BookingEntity{
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "pnr_sequence_generator")
 	@SequenceGenerator(name = "pnr_sequence_generator", initialValue = 10000)
-//	@Column(name = "pnr_number")
 	private Long pnrNumber;
 
 	@OneToMany(mappedBy = "booking", cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<TicketEntity> tickets;
 	
-//	//Ask Ghule Sir what to do
-//    @OneToOne(fetch = FetchType.LAZY, mappedBy = "booking", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private CoachEntity coach;
 	
 	@Enumerated(EnumType.STRING)
 	@Column(name = "coach_type")
@@ -65,27 +58,8 @@ public class BookingEntity{
 	@JoinColumn(name = "train_number_fk")
 	private TrainEntity train;
 	
-
-//	bcoz it can be computed using train_number
-//	@Transient // Marks this property as not persistent
-//	public String getSource() {
-//		return train != null && train.getRoute() != null ? train.getRoute().getSource() : null;
-//	}
-//	bcoz it can be computed using train_number
-//	// Example method to access destination, not stored directly in Booking table
-//	@Transient // Marks this property as not persistent
-//	public String getDestination() {
-//		return train != null && train.getRoute() != null ? train.getRoute().getDestination() : null;
-//	}
-
-//	@OneToOne
-//	@JoinColumn(name = "running_date", foreignKey = @ForeignKey(name = "fk_date_of_journey"))
-//	private LocalDate dateOfJourney;
-
-//	bcoz it can be computed using train_number
-	
 	@Column(name = "date_of_journey")
-	@FutureOrPresent
+	@Future
 	private LocalDate dateOfJourney;
 	
 	@Column
