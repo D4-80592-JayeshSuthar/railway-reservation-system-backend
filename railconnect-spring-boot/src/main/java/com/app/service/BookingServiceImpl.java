@@ -135,27 +135,26 @@ public class BookingServiceImpl implements BookingService {
 		// Convert and save tickets
 		List<TicketEntity> ticketEntities = new ArrayList<>();
 
-		// Fetch the coach counts for the train on the date of journey
-		Optional<Integer[]> coachCountsOptional = trainDao.findCoachCountByTrainNumberAndDateOfJourney(
-				newBooking.getTrain().getTrainNumber(), newBooking.getDateOfJourney());
-		System.out.println("**************" + coachCountsOptional.toString());
-
 		int acCount = 0;
 		int sleeperCount = 0;
 		int generalCount = 0;
-		if (coachCountsOptional.isPresent()) {
-			System.out.println("Inside Optional");
-			Integer[] coachCounts = coachCountsOptional.get();
-			System.out.println(coachCounts.toString());
-			if (coachCounts.length == 1)
-				acCount = coachCounts[0]; // Assuming ac_count is the first column
-			if (coachCounts.length == 2)
-				sleeperCount = coachCounts[1]; // Assuming sleeper_count is the second column
-			if (coachCounts.length == 3)
-				generalCount = coachCounts[2]; // Assuming general_count is the third column
-			// Use the counts as needed
-
-		}
+		
+		Optional<Integer> acOpt = trainDao.findAcCoachCountByTrainNumberAndDateOfJourney(newBooking.getTrain().getTrainNumber()
+				, newBooking.getDateOfJourney());
+		Optional<Integer> sleeperOpt = trainDao.findSleeperCoachCountByTrainNumberAndDateOfJourney(newBooking.getTrain().getTrainNumber()
+				, newBooking.getDateOfJourney());
+		Optional<Integer> generalOpt = trainDao.findGeneralCoachCountByTrainNumberAndDateOfJourney(newBooking.getTrain().getTrainNumber()
+				, newBooking.getDateOfJourney());
+		
+		if(acOpt.isPresent())
+			acCount = acOpt.get();
+		if(sleeperOpt.isPresent())
+			sleeperCount = sleeperOpt.get();
+		if(generalOpt.isPresent())
+			generalCount = generalOpt.get();
+		
+		System.out.println("Counts : "+acCount+sleeperCount+generalCount);
+		
 		// Iterate through each ticket in the booking
 		for (TicketDTO ticketDTO : booking.getTickets()) {
 			TicketEntity ticketEntity = TicketServiceImpl.convertDtoToEntity(ticketDTO);
